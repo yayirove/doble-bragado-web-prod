@@ -28,7 +28,7 @@ interface Props {
 
 const {
   title = "La Doble Bragado",
-  description = "La Vuelta Histórica de Ciclismo en Buenos Aires. Más de 500km de recorrido uniendo ciudades bonaerenses. La carrera de ciclismo más antigua de Argentina.",
+  description = "La Vuelta historica de ciclismo en Buenos Aires. Mas de 500km de recorrido uniendo ciudades bonaerenses. La carrera de ciclismo mas antigua de Argentina.",
   ogImage = "/images/og-image-v2.jpg",
   canonicalURL,
   structuredData = null,
@@ -41,7 +41,7 @@ const {
     position: "-35.1167;-60.4833",
     icbm: "-35.1167, -60.4833",
   },
-  // noindex: fuera de prod o en dominio distinto al oficial
+  // noindex fuera de prod o en dominio distinto al oficial
   noindex = (import.meta.env.MODE !== "production") || (Astro.url.hostname !== "ladoblebragado.com.ar"),
 } = Astro.props;
 
@@ -57,7 +57,7 @@ const normalizeUrl = (u: string) => {
 };
 
 const seoTitle = (title === "La Doble Bragado")
-  ? `${title} — Vuelta histórica de ciclismo en Buenos Aires`
+  ? `${title} — Vuelta historica de ciclismo en Buenos Aires`
   : `${title} — La Doble Bragado`;
 
 const fullImageURL = new URL(ogImage, baseURL).href;
@@ -108,7 +108,7 @@ const defaultSchemas: any[] = [
   (() => {
     const parts = Astro.url.pathname.split("/").filter(Boolean);
     const items = [{ "@type": "ListItem", "position": 1, "name": "Inicio", "item": baseURL }];
-    if (parts.length > 0) items.push({ "@type": "ListItem", "position": 2", "name": title, "item": currentCanonicalURL });
+    if (parts.length > 0) items.push({ "@type": "ListItem", "position": 2, "name": title, "item": currentCanonicalURL });
     return { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items };
   })()
 ];
@@ -149,9 +149,9 @@ const safeStringify = (obj: any) => {
 const schemasToRender = [...defaultSchemas, ...normalizeStruct(structuredData)];
 const jsonLdString = safeStringify(schemasToRender);
 
-/* ===== Inscripción: Google Form ===== */
+/* Inscripcion: Google Form (ID provisto) */
 const GOOGLE_FORM_ID = "1FAIpQLSdfPB8jlZ0PDPKvmetA6ogBAPRawZCjscULh_gGa2QJnWqQDA";
-const GOOGLE_FORM_EMBED = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/viewform?embedded=true`; // opcional para teasers
+const GOOGLE_FORM_EMBED = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/viewform?embedded=true`;
 ---
 
 <!doctype html>
@@ -210,7 +210,7 @@ const GOOGLE_FORM_EMBED = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/v
     <!-- Fonts -->
     {useTypekit && <link rel="preconnect" href="https://use.typekit.net" />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=Audiowide&display=swap" rel="stylesheet" />
 
     <!-- JSON-LD unificado -->
@@ -230,20 +230,18 @@ const GOOGLE_FORM_EMBED = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/v
 
     <Footer />
 
-    <!-- Modal de newsletter (contacto legacy) -->
+    <!-- Modal de newsletter (legacy) -->
     <NewsletterModal />
 
-    <!-- ÚNICO MODAL GLOBAL DE VIDEO (YouTube) -->
+    <!-- Modal YouTube global -->
     <div id="yt-modal" class="fixed inset-0 z-[200] hidden grid place-items-center p-4 bg-black/70 backdrop-blur-sm">
       <div id="yt-overlay" class="absolute inset-0"></div>
       <div class="relative w-full max-w-5xl bg-black rounded-2xl overflow-hidden shadow-2xl" style="aspect-ratio:16/9">
         <button id="yt-close" type="button"
-          class="group absolute -top-4 -right-4 w-11 h-11 rounded-full bg-white/90 text-oscuro
-                 grid place-items-center shadow-lg hover:scale-105 transition"
+          class="group absolute -top-4 -right-4 w-11 h-11 rounded-full bg-white/90 text-oscuro grid place-items-center shadow-lg hover:scale-105 transition"
           aria-label="Cerrar video">
           <svg viewBox="0 0 24 24" class="w-5 h-5">
-            <path d="M6 18L18 6M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 18L18 6M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
         <iframe id="yt-iframe"
@@ -255,38 +253,25 @@ const GOOGLE_FORM_EMBED = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/v
       </div>
     </div>
 
-    <!-- POPUP DE NOTICIA (teaser/CTA; opcional) -->
+    <!-- Popup de noticia / teaser (Google Form embebido) -->
     <NewsPopup formSrc={GOOGLE_FORM_EMBED} />
 
     <!-- Scripts cliente -->
     <script type="module" src="/scripts/yt-modal-adapter.js"></script>
     <script type="module" src="/scripts/news-popup.js"></script>
 
-    <!-- Modal de INSCRIPCIÓN (Google Form) -->
+    <!-- Modal de Inscripcion (Google Form) -->
     <InscripcionModal formId={GOOGLE_FORM_ID} />
 
-    <!-- Botón flotante -->
+    <!-- Boton flotante (abre modal de Inscripcion) -->
     <FloatingCTA />
 
     <!-- Modal de Contacto (Netlify Forms) -->
     <ContactoModal
-      title="Mantenerme informado"
-      subtitle="Quiero recibir información sobre todas las novedades de La Doble Bragado."
+      id="contacto-modal"
       formName="contacto-informado"
+      title="Mantenerme informado"
+      subtitle="Quiero recibir informacion sobre todas las novedades de La Doble Bragado."
     />
-
-    {/*
-      ====== NETLIFY FORMS: formulario 'sombra' para detección en build ======
-      Este form NO se ve (hidden), pero permite que Netlify registre el formulario.
-      Debe tener exactamente los mismos campos que envía el modal.
-    */}
-    <form name="contacto-informado" data-netlify="true" netlify-honeypot="bot-field" hidden>
-      <p class="hidden">
-        <label>Si sos humano no completes: <input name="bot-field" /></label>
-      </p>
-      <input type="text" name="nombre" />
-      <input type="email" name="email" />
-      <button type="submit">Enviar</button>
-    </form>
   </body>
 </html>
