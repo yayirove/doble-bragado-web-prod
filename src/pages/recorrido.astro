@@ -1,0 +1,606 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import Winners from "../components/Winners.astro";
+
+const pageTitle = "Recorrido La Doble Bragado 2025 - 500km de Épica Ciclística";
+const pageDescription = "Descubrí el recorrido de La Doble Bragado: etapas, datos clave y ganadores de la clásica del oeste bonaerense.";
+const pageKeywords = "recorrido doble bragado, etapas ciclismo, clásica del oeste, campeones, podios";
+
+// Structured Data básico para esta página
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    "name": "La Doble Bragado 2025",
+    "startDate": "2025-11-21T06:00:00-03:00",
+    "location": {
+      "@type": "Place",
+      "name": "Bragado a Chivilcoy",
+      "address": "Buenos Aires, Argentina"
+    },
+    "offers": {
+      "@type": "Offer",
+      "description": "500km en 2 etapas - Inscripciones abiertas"
+    }
+  }
+];
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  structuredData={structuredData}
+>
+  <a href="#contenido" class="sr-only focus:not-sr-only">Saltar al contenido</a>
+
+  <main id="contenido" role="main" tabindex="-1">
+    <!-- 1) HERO -->
+    <section id="hero-recorrido" class="h-screen flex items-center justify-center relative text-center" aria-labelledby="recorrido-title">
+      <div class="absolute inset-0">
+        <img
+          src="/images/hero-historia-golden-v2.jpg"
+          alt="Pelotón en La Doble Bragado"
+          fetchpriority="high" decoding="async"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+      </div>
+      <div class="absolute inset-0 bg-black/25" aria-hidden="true"></div>
+      <div class="text-white z-10 max-w-5xl px-8">
+        <h1 id="recorrido-title" class="font-display font-black text-6xl md:text-7xl lg:text-8xl mb-6 leading-tight text-amarillo">
+          LA CLÁSICA<br />DEL OESTE
+        </h1>
+        <p class="text-xl md:text-3xl mb-8 opacity-90 font-semibold max-w-4xl mx-auto">
+          La prueba que ha definido a generaciones de ciclistas.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2) GANADORES -->
+    <Winners />
+
+    <!-- 3) DATOS DEL RECORRIDO -->
+    <section class="bg-oscuro py-20" aria-labelledby="datos-title">
+      <div class="max-w-7xl mx-auto px-8">
+        <header class="text-center mb-12">
+          <h2 id="datos-title" class="font-display font-black text-4xl md:text-5xl text-white uppercase">
+            Datos del Recorrido
+          </h2>
+        </header>
+
+        <!-- Masculina -->
+        <div id="edicion-88-2025" role="group" aria-labelledby="ed-masc-title" class="mb-10 scroll-mt-24">
+          <h3 id="ed-masc-title" class="text-center text-amarillo font-black text-xl md:text-2xl uppercase tracking-wide">
+            EDICIÓN 88 - 2025
+          </h3>
+
+          <div class="mt-6 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <article class="bg-grisclaro/10 backdrop-blur-sm rounded-3xl p-8 text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <p class="text-5xl font-black text-amarillo leading-none">160</p>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">Corredores</h4>
+            </article>
+            <article class="bg-grisclaro/10 backdrop-blur-sm rounded-3xl p-8 text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <p class="text-5xl font-black text-amarillo leading-none">25</p>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">Equipos</h4>
+            </article>
+            <article class="bg-grisclaro/10 backdrop-blur-sm rounded-3xl p-8 text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <p class="text-5xl font-black text-amarillo leading-none">980k</p>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">KM Recorridos</h4>
+            </article>
+            <article class="bg-grisclaro/10 backdrop-blur-sm rounded-3xl p-8 text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <time datetime="PT27H56M43S" class="leading-none block">
+                <span class="inline-flex items-baseline gap-3">
+                  <span class="inline-flex items-baseline"><span class="text-4xl font-black text-amarillo">27</span><span class="text-xs font-bold text-white">h</span></span>
+                  <span class="inline-flex items-baseline"><span class="text-4xl font-black text-amarillo">56</span><span class="text-xs font-bold text-white">m</span></span>
+                  <span class="inline-flex items-baseline"><span class="text-4xl font-black text-amarillo">43</span><span class="text-xs font-bold text-white">s</span></span>
+                </span>
+              </time>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">Tiempo Total</h4>
+            </article>
+          </div>
+        </div>
+
+        <!-- Femenina -->
+        <div id="edicion-2-2024" role="group" aria-labelledby="ed-fem-title" class="scroll-mt-24">
+          <h3 id="ed-fem-title" class="text-center text-amarillo font-black text-xl md:text-2xl uppercase tracking-wide">
+            EDICIÓN 2 - 2024
+          </h3>
+
+          <div class="mt-6 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <article class="bg-gradient-to-r from-celeste to-rosa rounded-3xl p-8 text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <p class="text-5xl font-black text-amarillo leading-none">120</p>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">Corredoras</h4>
+            </article>
+            <article class="bg-gradient-to-r from-celeste to-rosa rounded-3xl p-8 text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <p class="text-5xl font-black text-amarillo leading-none">19</p>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">Equipos</h4>
+            </article>
+            <article class="bg-gradient-to-r from-celeste to-rosa rounded-3xl p-8 text-center text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <p class="text-5xl font-black text-amarillo leading-none">750k</p>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">KM Recorridos</h4>
+            </article>
+            <article class="bg-gradient-to-r from-celeste to-rosa rounded-3xl p-8 text-center shadow-xl border-2 border-transparent hover:border-amarillo transition-all duration-300">
+              <time datetime="PT20H40M50S" class="leading-none block">
+                <span class="inline-flex items-baseline gap-3">
+                  <span class="inline-flex items-baseline"><span class="text-4xl font-black text-amarillo">20</span><span class="text-xs font-bold text-white">h</span></span>
+                  <span class="inline-flex items-baseline"><span class="text-4xl font-black text-amarillo">40</span><span class="text-xs font-bold text-white">m</span></span>
+                  <span class="inline-flex items-baseline"><span class="text-4xl font-black text-amarillo">50</span><span class="text-xs font-bold text-white">s</span></span>
+                </span>
+              </time>
+              <h4 class="mt-3 text-2xl font-bold text-white uppercase">Tiempo Total</h4>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) EXPLORÁ EL RECORRIDO (selector estilo REVIVÍ + paneles) -->
+    <section class="section-recorrido py-20" aria-labelledby="contenido-title">
+      <div class="max-w-7xl mx-auto px-8">
+        <header class="text-center mb-12">
+          <h2 id="contenido-title" class="font-display font-black text-5xl text-oscuro mb-4 uppercase">
+            Explorá el Recorrido
+          </h2>
+          <p class="text-gris text-sm md:text-base">Elegí Masculina o Femenina y tocá cada etapa para ver foto y texto.</p>
+        </header>
+
+        <!-- Selector PILLS (idéntico a REVIVÍ) -->
+        <div class="flex justify-center mb-10">
+          <div class="inline-flex bg-white rounded-full shadow-lg p-1" role="tablist" aria-label="Selector de categoría">
+            <button id="etapas-tab-masc" class="relative px-8 py-3 rounded-full font-semibold text-oscuro/80 transition-all duration-300" role="tab" aria-selected="true" aria-controls="panel-etapas">
+              <span class="relative z-10">Masculina</span>
+              <span class="etapas-indicator absolute inset-0 bg-gradient-to-r from-celeste to-celeste rounded-full opacity-100"></span>
+            </button>
+            <button id="etapas-tab-fem" class="relative px-8 py-3 rounded-full font-semibold text-oscuro/80 transition-all duration-300" role="tab" aria-selected="false" aria-controls="panel-etapas-fem">
+              <span class="relative z-10">Femenina</span>
+              <span class="etapas-indicator absolute inset-0 bg-gradient-to-r from-violeta to-rosa rounded-full opacity-0"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Panel ETAPAS MASC -->
+        <div id="panel-etapas" data-panel="etapas" data-edition="masc" role="tabpanel" aria-labelledby="etapas-tab-masc">
+          <div class="timeline-container overflow-x-auto overflow-y-visible pb-2">
+            <div class="timeline-track flex gap-6 min-w-[600px] md:min-w-0 relative overflow-visible">
+              <div class="hidden md:block absolute top-10 left-12 right-12 h-0.5 bg-celeste/20 -z-10"></div>
+
+              {[{n:1, city:'Circuito Callejero\nChivilcoy', km:'110k', icon:'map-pin', photo:'/images/etapas/masc-1.jpg'},
+                {n:2, city:'Ruta: Chivilcoy, Chacabuco\nSalto, Pergamino', km:'160k', icon:'map-pin', photo:'/images/etapas/masc-2.jpg'},
+                {n:3, city:'CRI', km:'10k', icon:'clock', photo:'/images/etapas/masc-3.jpg'},
+                {n:4, city:'Circuito 4 Avenidas\nPergamino', km:'114k', icon:'map-pin', photo:'/images/etapas/masc-4.jpg'},
+                {n:5, city:'Circuito Callejero\nBragado', km:'114k', icon:'map-pin', photo:'/images/etapas/masc-5.jpg'}].map((st) => (
+                <article class="timeline-stage flex-shrink-0 text-center" data-stage-open data-title={`Etapa ${st.n} – Masculina`} data-desc={`Detalles de la etapa ${st.n} (${st.city}).`} data-photo={st.photo}>
+                  <div class="relative w-fit mx-auto">
+                    <button class="group relative w-16 h-16 md:w-[84px] md:h-[84px] bg-celeste text-white rounded-full grid place-items-center shadow-lg mx-auto mb-3 focus:outline-none focus:ring-2 focus:ring-amarillo overflow-visible hover:scale-105 transition transform-gpu will-change-transform">
+                      <Icon name={st.icon} class="w-6 h-6 md:w-6 md:h-6" ariaHidden />
+                    </button>
+                    <div class="stage-pop hidden absolute left-1/2 -translate-x-1/2 top-[90%] w-72 bg-white rounded-xl p-4 shadow-2xl border border-amarillo/30 text-left">
+                      <img src={st.photo} alt={`Foto etapa ${st.n}`} class="w-full h-28 object-cover rounded-lg mb-2" />
+                      <h4 class="text-oscuro font-bold mb-1">Etapa {st.n} — {st.city}</h4>
+                      <p class="text-gris text-sm">Recorrido total: {st.km}. Todos los tiempos y ganadores en “Ganadores”.</p>
+                    </div>
+                  </div>
+                  <h3 class="font-bold text-base text-oscuro mb-1">Etapa {st.n}</h3>
+                  <p class="text-xs text-oscuro/80 font-semibold whitespace-pre-line">{st.city}</p>
+                  <p class="text-[11px] text-celeste font-extrabold mt-1">{st.km}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel ETAPAS FEM (4 etapas) -->
+        <div id="panel-etapas-fem" class="hidden" data-panel="etapas" data-edition="fem" role="tabpanel" aria-labelledby="etapas-tab-fem">
+          <div class="timeline-container overflow-x-auto overflow-y-visible pb-2">
+            <div class="timeline-track flex gap-6 min-w-[600px] md:min-w-0 relative overflow-visible">
+              <div class="hidden md:block absolute top-10 left-12 right-12 h-0.5 bg-violeta/30 -z-10"></div>
+
+              {[{n:1, city:'Ruta\nBragado, 25 de Mayo, Bragado', km:'100k', icon:'map-pin', photo:'/images/etapas/fem-1.jpg'},
+                {n:2, city:'CRI', km:'8k', icon:'clock', photo:'/images/etapas/fem-2.jpg'},
+                {n:3, city:'Circuito Callejero\nBragado', km:'114k', icon:'map-pin', photo:'/images/etapas/fem-3.jpg'},
+                {n:4, city:'Circuito Callejero\nChivilcoy', km:'110k', icon:'map-pin', photo:'/images/etapas/fem-4.jpg'}].map((st) => (
+                <article class="timeline-stage flex-shrink-0 text-center" data-stage-open data-title={`Etapa ${st.n} – Femenina`} data-desc={`Detalles de la etapa ${st.n} (${st.city}).`} data-photo={st.photo}>
+                  <div class="relative w-fit mx-auto">
+                    <button class="group relative w-16 h-16 md:w-[84px] md:h-[84px] bg-violeta text-white rounded-full grid place-items-center shadow-lg mx-auto mb-3 focus:outline-none focus:ring-2 focus:ring-amarillo overflow-visible hover:scale-105 transition transform-gpu will-change-transform">
+                      <Icon name={st.icon} class="w-6 h-6 md:w-6 md:h-6" ariaHidden />
+                    </button>
+                    <div class="stage-pop hidden absolute left-1/2 -translate-x-1/2 top-[90%] w-72 bg-white rounded-xl p-4 shadow-2xl border border-amarillo/30 text-left">
+                      <img src={st.photo} alt={`Foto etapa ${st.n}`} class="w-full h-28 object-cover rounded-lg mb-2" />
+                      <h4 class="text-oscuro font-bold mb-1">Etapa {st.n} — {st.city}</h4>
+                      <p class="text-gris text-sm">Recorrido total: {st.km}. Todos los tiempos y ganadoras en “Ganadores”.</p>
+                    </div>
+                  </div>
+                  <h3 class="font-bold text-base text-oscuro mb-1">Etapa {st.n}</h3>
+                  <p class="text-xs text-oscuro/80 font-semibold whitespace-pre-line">{st.city}</p>
+                  <p class="text-[11px] text-violeta font-extrabold mt-1">{st.km}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5) REVIVÍ LAS ETAPAS -->
+    <section class="relative overflow-hidden py-16 lg:py-24 bg-gradient-to-b from-grisclaro to-white" aria-labelledby="revivi-title">
+      <div class="absolute inset-0 opacity-5" aria-hidden="true">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-celeste rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-violeta rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 id="revivi-title" class="font-black text-4xl md:text-6xl text-oscuro mb-4 uppercase tracking-tight">
+            Reviví las <span class="bg-gradient-to-r from-celeste to-violeta bg-clip-text text-transparent">Etapas</span>
+          </h2>
+          <p class="text-gris text-lg max-w-2xl mx-auto">Experiencia completa de cada etapa con análisis y momentos destacados</p>
+        </div>
+
+        <!-- Tabs Masculina/Femenina -->
+        <div class="flex justify-center mb-12">
+          <div class="inline-flex bg-white rounded-full shadow-lg p-1">
+            <button id="revivi-tab-masc" class="relative px-8 py-3 rounded-full font-semibold text-oscuro/80 transition-all duration-300">
+              <span class="relative z-10">Masculina</span>
+              <span class="revivi-indicator absolute inset-0 bg-gradient-to-r from-celeste to-celeste rounded-full opacity-0"></span>
+            </button>
+            <button id="revivi-tab-fem" class="relative px-8 py-3 rounded-full font-semibold text-oscuro/80 transition-all duration-300">
+              <span class="relative z-10">Femenina</span>
+              <span class="revivi-indicator absolute inset-0 bg-gradient-to-r from-violeta to-rosa rounded-full opacity-0"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Player + Info -->
+        <div class="grid lg:grid-cols-3 gap-8 mb-12">
+          <div class="lg:col-span-2">
+            <div id="featured-video" class="relative group">
+              <div class="relative aspect-video bg-oscuro rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  id="featured-thumb"
+                  src="https://img.youtube.com/vi/_sI7tTt_PvM/maxresdefault.jpg"
+                  alt="Video destacado"
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none"></div>
+                <button
+                  id="play-featured"
+                  type="button"
+                  aria-label="Reproducir video"
+                  data-ytid="_sI7tTt_PvM"
+                  class="absolute inset-0 grid place-items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-amarillo/80"
+                >
+                  <div class="relative">
+                    <div class="absolute inset-0 bg-white/30 rounded-full blur-xl"></div>
+                    <div class="relative w-20 h-20 bg-gradient-to-r from-celeste to-violeta rounded-full grid place-items-center shadow-2xl transition-transform group-hover:scale-110">
+                      <span class="material-icons text-white text-4xl ml-1">play_arrow</span>
+                    </div>
+                  </div>
+                  <span class="sr-only">Reproducir</span>
+                </button>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="px-3 py-1 bg-celeste/80 backdrop-blur rounded-full text-xs font-semibold">EN VIVO</span>
+                    <span id="featured-duration" class="text-sm opacity-80">15:42 min</span>
+                  </div>
+                  <h3 id="featured-title" class="text-2xl font-bold mb-1">Etapa 1 - Chivilcoy</h3>
+                  <p id="featured-desc" class="text-sm opacity-90">Sprint final emocionante con llegada al fotofinish</p>
+                </div>
+              </div>
+              <div class="mt-4 bg-grisclaro rounded-full h-1 overflow-hidden">
+                <div id="video-progress" class="h-full bg-gradient-to-r from-celeste to-violeta w-0 transition-all duration-300"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-xl p-6 h-full">
+              <h3 class="font-bold text-oscuro text-lg mb-4 flex items-center gap-2">
+                <span class="material-icons text-celeste">info</span>
+                Información de Etapa
+              </h3>
+
+              <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="bg-grisclaro rounded-lg p-3">
+                    <p class="text-xs text-gris/80 mb-1">Distancia</p>
+                    <p id="stage-distance" class="font-bold text-oscuro">120 km</p>
+                  </div>
+                  <div class="bg-grisclaro rounded-lg p-3">
+                    <p class="text-xs text-gris/80 mb-1">Ganador</p>
+                    <p id="stage-winner" class="font-bold text-oscuro">J. Pérez</p>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-oscuro/90 mb-2 text-sm">Momentos Clave</h4>
+                  <ul class="space-y-2 text-sm text-gris">
+                    <li class="flex items-start gap-2">
+                      <span class="material-icons text-celeste text-base mt-0.5">sports_score</span>
+                      <span>Sprint intermedio en km 45</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="material-icons text-violeta text-base mt-0.5">terrain</span>
+                      <span>Puerto de montaña categoría 2</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="material-icons text-amarillo text-base mt-0.5">flag</span>
+                      <span>Final con llegada masiva</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carrusel -->
+        <div class="relative">
+          <button id="carousel-left" class="absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg grid place-items-center hover:scale-110 transition">
+            <span class="material-icons text-oscuro">chevron_left</span>
+          </button>
+          <button id="carousel-right" class="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg grid place-items-center hover:scale-110 transition">
+            <span class="material-icons text-oscuro">chevron_right</span>
+          </button>
+          <div id="video-carousel" class="overflow-x-auto pb-4">
+            <div id="carousel-track" class="flex gap-4 transition-transform duration-300"></div>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="mt-12 grid md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-xl p-6 text-center hover:-translate-y-1 transition shadow">
+            <div class="w-16 h-16 bg-celeste/10 rounded-full grid place-items-center mx-auto mb-4"><span class="material-icons text-celeste text-2xl">analytics</span></div>
+            <h3 class="font-bold text-oscuro mb-2">Análisis Técnico</h3>
+            <p class="text-gris text-sm">Datos detallados de cada etapa con métricas avanzadas</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 text-center hover:-translate-y-1 transition shadow">
+            <div class="w-16 h-16 bg-rosa/10 rounded-full grid place-items-center mx-auto mb-4"><span class="material-icons text-rosa text-2xl">star</span></div>
+            <h3 class="font-bold text-oscuro mb-2">Mejores Momentos</h3>
+            <p class="text-gris text-sm">Compilación de las jugadas más emocionantes</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 text-center hover:-translate-y-1 transition shadow">
+            <div class="w-16 h-16 bg-amarillo/10 rounded-full grid place-items-center mx-auto mb-4"><span class="material-icons text-amarillo text-2xl">forum</span></div>
+            <h3 class="font-bold text-oscuro mb-2">Entrevistas</h3>
+            <p class="text-gris text-sm">Declaraciones exclusivas de los protagonistas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6) COUNTDOWN -->
+    <section id="countdown" class="py-16 relative flex items-center justify-center" aria-labelledby="countdown-title">
+      <img src="/images/img-countdown.jpg" alt="" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-black/60" aria-hidden="true"></div>
+
+      <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <header class="mb-10">
+          <h2 id="countdown-title" class="font-display font-black text-4xl md:text-5xl text-white mb-2 uppercase">Próximo evento</h2>
+          <p class="text-2xl md:text-3xl lg:text-3xl leading-tight text-amarillo font-semibold drop-shadow-[0_0_8px_rgba(247,226,0,0.55)] md:drop-shadow-[0_0_12px_rgba(247,226,0,0.65)]">
+            <time datetime="2025-12-12">12 de Diciembre 2025</time> - 3° edición femenina
+          </p>
+        </header>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto" role="timer" aria-label="Cuenta regresiva para La Doble Bragado 2025">
+          <div class="bg-gradient-to-br from-violetaOscuro to-rosa p-6 sm:p-8 rounded-3xl text-center text-white">
+            <span id="days" class="font-clock font-black text-4xl md:text-5xl block mb-1" aria-live="polite">--</span>
+            <span class="font-bold uppercase tracking-wider text-xs md:text-sm">Días</span>
+          </div>
+          <div class="bg-gradient-to-br from-violetaOscuro to-rosa p-6 sm:p-8 rounded-3xl text-center text-white">
+            <span id="hours" class="font-clock font-black text-4xl md:text-5xl block mb-1" aria-live="polite">--</span>
+            <span class="font-bold uppercase tracking-wider text-xs md:text-sm">Horas</span>
+          </div>
+          <div class="bg-gradient-to-br from-violetaOscuro to-rosa p-6 sm:p-8 rounded-3xl text-center text-white">
+            <span id="minutes" class="font-clock font-black text-4xl md:text-5xl block mb-1" aria-live="polite">--</span>
+            <span class="font-bold uppercase tracking-wider text-xs md:text-sm">Minutos</span>
+          </div>
+          <div class="bg-gradient-to-br from-violetaOscuro to-rosa p-6 sm:p-8 rounded-3xl text-center text-white">
+            <span id="seconds" class="font-clock font-black text-4xl md:text-5xl block mb-1" aria-live="polite">--</span>
+            <span class="font-bold uppercase tracking-wider text-xs md:text-sm">Segundos</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<!-- SCRIPTS -->
+
+<!-- 1) Countdown -->
+<script is:inline>
+  function updateCountdown() {
+    const targetDate = new Date("2025-12-12T00:00:00-03:00").getTime();
+    const now = new Date().getTime();
+    const difference = targetDate - now;
+
+    const D = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+    if (difference > 0) {
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      D("days", String(days).padStart(2, "0"));
+      D("hours", String(hours).padStart(2, "0"));
+      D("minutes", String(minutes).padStart(2, "0"));
+      D("seconds", String(seconds).padStart(2, "0"));
+    } else {
+      ["days", "hours", "minutes", "seconds"].forEach(k => D(k, "00"));
+      clearInterval(countdownInterval);
+    }
+  }
+  const countdownInterval = setInterval(updateCountdown, 1000);
+  document.addEventListener("DOMContentLoaded", updateCountdown);
+</script>
+
+<!-- 2) Selector PILLS de EXPLORÁ (idéntico lógica a REVIVÍ) -->
+<script is:inline>
+  (function () {
+    const tabMasc = document.getElementById('etapas-tab-masc');
+    const tabFem  = document.getElementById('etapas-tab-fem');
+    const panelMasc = document.getElementById('panel-etapas');
+    const panelFem  = document.getElementById('panel-etapas-fem');
+
+    function setEtapasEdition(ed) {
+      const masc = ed === 'masc';
+
+      const i1 = tabMasc?.querySelector('.etapas-indicator');
+      const i2 = tabFem?.querySelector('.etapas-indicator');
+      if (i1) i1.style.opacity = masc ? '1' : '0';
+      if (i2) i2.style.opacity = masc ? '0' : '1';
+
+      tabMasc?.classList.toggle('text-white', masc);
+      tabFem?.classList.toggle('text-white', !masc);
+
+      tabMasc?.setAttribute('aria-selected', masc ? 'true' : 'false');
+      tabFem?.setAttribute('aria-selected', masc ? 'false' : 'true');
+
+      panelMasc?.classList.toggle('hidden', !masc);
+      panelFem?.classList.toggle('hidden', masc);
+    }
+
+    tabMasc?.addEventListener('click', () => setEtapasEdition('masc'));
+    tabFem?.addEventListener('click',  () => setEtapasEdition('fem'));
+
+    // init
+    setEtapasEdition('masc');
+  })();
+</script>
+
+<!-- 3) Pop cards en timeline (Explorá) -->
+<script is:inline>
+  (function () {
+    document.querySelectorAll('[data-stage-open]').forEach((card) => {
+      const btn = card.querySelector('button');
+      const pop = card.querySelector('.stage-pop');
+      if (!btn || !pop) return;
+      btn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        document.querySelectorAll('.stage-pop').forEach((x) => x.classList.add('hidden'));
+        pop.classList.toggle('hidden');
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.stage-pop').forEach((x) => x.classList.add('hidden'));
+    });
+  })();
+</script>
+
+<!-- 4) REVIVÍ LAS ETAPAS (tabs, carrusel y modal YouTube) -->
+<script is:inline>
+  (function () {
+    const videoData = {
+      masculina: [
+        { id: '_sI7tTt_PvM', title: 'Etapa 1 - Chivilcoy', duration: '15:42', distance: '120 km', winner: 'J. Pérez', desc: 'Sprint final emocionante con llegada al fotofinish' },
+        { id: 'dQw4w9WgXcQ', title: 'Etapa 2 - Pergamino', duration: '18:30', distance: '160 km', winner: 'M. González', desc: 'Escapada exitosa en los últimos 20km' },
+        { id: '_sI7tTt_PvM', title: 'Etapa 3 - CRI',       duration: '12:15', distance: '10 km',  winner: 'L. Rodríguez', desc: 'Contrarreloj técnica con viento cruzado' },
+        { id: 'dQw4w9WgXcQ', title: 'Etapa 4 - Pergamino', duration: '16:48', distance: '130 km', winner: 'A. Martínez',  desc: 'Victoria en solitario tras ataque en el puerto' },
+        { id: '_sI7tTt_PvM', title: 'Etapa 5 - Bragado',   duration: '14:22', distance: '120 km', winner: 'D. Silva',     desc: 'Final apretado con tres corredores al sprint' }
+      ],
+      femenina: [
+        { id: 'dQw4w9WgXcQ', title: 'Etapa 1 - Chivilcoy', duration: '13:20', distance: '100 km', winner: 'S. López',     desc: 'Dominio absoluto del equipo líder' },
+        { id: '_sI7tTt_PvM', title: 'Etapa 2 - Pergamino', duration: '15:45', distance: '120 km', winner: 'C. Fernández', desc: 'Ataque sorpresa en el último kilómetro' },
+        { id: 'dQw4w9WgXcQ', title: 'Etapa 3 - CRI',       duration: '10:30', distance: '8 km',   winner: 'V. Ruiz',      desc: 'Récord de velocidad media en contrarreloj' },
+        { id: '_sI7tTt_PvM', title: 'Etapa 4 - Final',     duration: '14:15', distance: '110 km', winner: 'P. García',    desc: 'Victoria emotiva en la etapa reina' }
+      ]
+    };
+
+    let currentCategory = 'masculina';
+    let currentVideoIndex = 0;
+
+    const mascTab = document.getElementById('revivi-tab-masc');
+    const femTab  = document.getElementById('revivi-tab-fem');
+    const playBtn = document.getElementById('play-featured');
+
+    function switchCategory(cat) {
+      currentCategory = cat;
+      currentVideoIndex = 0;
+
+      const i1 = mascTab?.querySelector('.revivi-indicator');
+      const i2 = femTab?.querySelector('.revivi-indicator');
+      if (cat === 'masculina') {
+        if (i1) i1.style.opacity = '1';
+        if (i2) i2.style.opacity = '0';
+        mascTab?.classList.add('text-white');
+        femTab?.classList.remove('text-white');
+      } else {
+        if (i2) i2.style.opacity = '1';
+        if (i1) i1.style.opacity = '0';
+        femTab?.classList.add('text-white');
+        mascTab?.classList.remove('text-white');
+      }
+
+      loadVideos();
+      updateFeatured(0);
+    }
+
+    function loadVideos() {
+      const track = document.getElementById('carousel-track');
+      if (!track) return;
+      const vids = videoData[currentCategory] || [];
+      track.innerHTML = vids.map((v, idx) => `
+        <div class="flex-shrink-0 w-72 cursor-pointer" data-vid="${idx}">
+          <div class="relative group">
+            <div class="aspect-video bg-oscuro rounded-lg overflow-hidden shadow-lg">
+              <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="${v.title}" class="w-full h-full object-cover"/>
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition"></div>
+              <div class="absolute inset-0 grid place-items-center">
+                <div class="w-12 h-12 bg-white/90 rounded-full grid place-items-center group-hover:scale-110 transition">
+                  <span class="material-icons text-oscuro ml-1">play_arrow</span>
+                </div>
+              </div>
+              <div class="absolute bottom-2 right-2 px-2 py-1 bg-black/70 rounded text-white text-xs">${v.duration}</div>
+            </div>
+            <h4 class="mt-2 font-semibold text-oscuro">${v.title}</h4>
+            <p class="text-sm text-gris">${v.distance}</p>
+          </div>
+        </div>`).join('');
+
+      track.querySelectorAll('[data-vid]').forEach((el) =>
+        el.addEventListener('click', () => updateFeatured(+el.dataset.vid))
+      );
+    }
+
+    function updateFeatured(index) {
+      currentVideoIndex = index;
+      const v = (videoData[currentCategory] || [])[index];
+      if (!v) return;
+
+      const thumb    = document.getElementById('featured-thumb');
+      const title    = document.getElementById('featured-title');
+      const desc     = document.getElementById('featured-desc');
+      const distance = document.getElementById('stage-distance');
+      const winner   = document.getElementById('stage-winner');
+      const duration = document.getElementById('featured-duration');
+      const progress = document.getElementById('video-progress');
+
+      if (thumb)    thumb.src = `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
+      if (title)    title.textContent = v.title;
+      if (desc)     desc.textContent = v.desc;
+      if (distance) distance.textContent = v.distance;
+      if (winner)   winner.textContent = v.winner;
+      if (duration) duration.textContent = v.duration + ' min';
+      if (progress) {
+        progress.style.width = '0%';
+        setTimeout(() => { progress.style.width = '30%'; }, 100);
+      }
+
+      if (playBtn) playBtn.setAttribute('data-ytid', v.id);
+
+      document.querySelectorAll('#carousel-track .aspect-video').forEach((el, i) => {
+        el.classList.toggle('ring-4', i === index);
+        el.classList.toggle('ring-celeste', i === index);
+      });
+    }
+
+    const track = document.getElementById('carousel-track');
+    document.getElementById('carousel-left')?.addEventListener('click', () => { track?.scrollBy({ left: -320, behavior: 'smooth' }); });
+    document.getElementById('carousel-right')?.addEventListener('click', () => { track?.scrollBy({ left: 320, behavior: 'smooth' }); });
+
+    document.getElementById('revivi-tab-masc')?.addEventListener('click', () => switchCategory('masculina'));
+    document.getElementById('revivi-tab-fem')?.addEventListener('click',  () => switchCategory('femenina'));
+
+    // init
+    switchCategory('masculina');
+  })();
+</script>

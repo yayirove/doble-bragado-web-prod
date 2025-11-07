@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   TIPOGRAFÍAS + ESCALA
+   ========================= */
+:root {
+  /* Familias por defecto */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  --font-display: "Inter", var(--font-sans);
+  --font-clock: "Audiowide", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Escala móvil-first con clamp */
+  --step--1: clamp(0.85rem, 0.80rem + 0.30vw, 0.95rem);
+  --step-0:  clamp(1.00rem, 0.95rem + 0.45vw, 1.10rem);
+  --step-1:  clamp(1.15rem, 1.05rem + 0.60vw, 1.25rem);
+  --step-2:  clamp(1.35rem, 1.20rem + 0.90vw, 1.50rem);
+  --step-3:  clamp(1.70rem, 1.40rem + 1.30vw, 1.95rem);
+  --step-4:  clamp(2.10rem, 1.70rem + 1.90vw, 2.50rem);
+
+  /* ===== TOKENS HEX (masculina por defecto) ===== */
+  --color-oscuro:   #171442;
+  --color-celeste:  #2650A1;
+  --color-amarillo: #F7E200;
+  --color-rosa:     #DA5DA1;
+  --color-gris:     #333333;
+  --color-grisclaro:#F1F1F2;
+
+  /* ===== TOKENS RGB (para /alpha en Tailwind) ===== */
+  --rgb-oscuro:    23 20 66;     /* #171442 */
+  --rgb-celeste:   38 80 161;    /* #2650A1 */
+  --rgb-amarillo:  247 226 0;    /* #F7E200 */
+  --rgb-rosa:      218 93 161;   /* #DA5DA1 */
+  --rgb-gris:      51 51 51;     /* #333333 */
+  --rgb-grisclaro: 241 241 242;  /* #F1F1F2 */
+    --rgb-violeta:    104 44 125;  /* #682C7D */
+  --rgb-violetaosc: 54 17 99;    /* #361163 */
+
+  /* Aliases neutrales */
+  --texto: var(--color-gris);
+  --gris-claro: var(--color-grisclaro);
+}
+
+/* ===== Tema Femenina: activar con <html data-theme="fem"> ===== */
+:root[data-theme="fem"] {
+  /* HEX */
+  --color-oscuro:   #361163;   /* violeta oscuro */
+  --color-celeste:  #682C7D;   /* violeta */
+  --color-amarillo: #F7E200;
+  --color-rosa:     #DA5DA1;
+  --color-gris:     #333333;
+  --color-grisclaro:#F1F1F2;
+
+  /* RGB */
+  --rgb-oscuro:    54 17 99;    /* #361163 */
+  --rgb-celeste:   104 44 125;  /* #682C7D */
+  --rgb-amarillo:  247 226 0;   /* #F7E200 */
+  --rgb-rosa:      218 93 161;  /* #DA5DA1 */
+  --rgb-gris:      51 51 51;    /* #333333 */
+  --rgb-grisclaro: 241 241 242; /* #F1F1F2 */
+   --rgb-violeta:    104 44 125;  /* #682C7D */
+  --rgb-violetaosc: 54 17 99;    /* #361163 */
+
+  --texto: var(--color-gris);
+  --gris-claro: var(--color-grisclaro);
+}
+
+/* Base */
+html { font-family: var(--font-sans); scroll-behavior: smooth; color-scheme: light; }
+body { font-size: var(--step-0); line-height: 1.55; color: var(--color-gris); background: #fff; }
+
+/* Titulares */
+h1 { font-family: var(--font-display); font-size: var(--step-4); line-height: 1.1; letter-spacing: -0.01em; }
+h2 { font-family: var(--font-display); font-size: var(--step-3); line-height: 1.15; }
+h3 { font-family: var(--font-display); font-size: var(--step-2); line-height: 1.2; }
+.small { font-size: var(--step--1); }
+
+/* Reloj/contador */
+.font-clock,
+.countdown,
+[data-countdown],
+#reloj,
+#contador,
+.timer,
+.flip-clock {
+  font-family: var(--font-clock);
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-feature-settings: "tnum" 1, "zero" 1;
+  letter-spacing: .02em;
+}
+
+/* Accesibilidad: foco visible consistente */
+:is(a, button, [role="button"], input, select, textarea, summary):focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 2px var(--color-oscuro),   /* anillo interno */
+    0 0 0 4px var(--color-amarillo); /* anillo externo */
+  border-radius: .25rem;
+}
+
+/* Respeta reducida animación */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================
+   COMPONENTES UI COMPACTOS
+   ========================= */
+@layer components {
+  /* Cards base */
+  .card   { @apply bg-white border rounded-2xl p-4 shadow-sm; }
+  .card   { @apply border-amarillo border-opacity-20; }
+
+  /* Botones */
+  .btn    { @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium bg-celeste text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-amarillo; }
+  .btn-lg { @apply px-5 py-3 text-base; }
+  .btn-xl { @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-base md:px-8 md:py-4 md:text-lg font-semibold; }
+  .btn-sm { @apply px-3 py-1.5 text-xs; }
+
+  /* Inputs */
+  .input  { @apply w-full rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amarillo; }
+  .input  { @apply border-amarillo border-opacity-40; }
+
+  /* Toggle edición */
+  .edition-toggle {
+    @apply px-4 py-2 rounded-xl font-semibold border text-white bg-celeste focus:outline-none focus:ring-2 focus:ring-amarillo transition;
+  }
+  .edition-toggle { @apply border-celeste border-opacity-40 bg-opacity-20; }
+  .edition-toggle:hover { @apply bg-opacity-30; }
+  .edition-toggle.active,
+  .edition-toggle[aria-pressed="true"] { @apply bg-amarillo text-oscuro border-amarillo; }
+
+  /* Tabs accesibles */
+  .tablist-wrapper { @apply border-b mb-6 overflow-x-auto; }
+  .tablist-wrapper { @apply border-white border-opacity-10; }
+  .tablist { @apply flex flex-wrap gap-2; }
+  .tab-button { @apply px-4 py-2 font-semibold text-white border-b-4 border-transparent rounded-t-lg transition; }
+  .tab-button { @apply opacity-80; }
+  .tab-button:hover { @apply text-white bg-white bg-opacity-10; }
+  .tab-button.active,
+  .tab-button[aria-selected="true"] { @apply text-amarillo border-amarillo; }
+  .tab-panel { display: block; }
+  .tab-panel.hidden { display: none; }
+
+  /* Timeline (vertical alternado) */
+  .timeline-wrapper { @apply relative max-w-3xl mx-auto flex flex-col items-stretch; }
+  .timeline-wrapper::before {
+    content: "";
+    @apply hidden md:block absolute left-1/2 top-0 h-full w-0.5 bg-celeste;
+    opacity: .3;
+  }
+  .timeline-item { @apply relative pl-12; }
+  .timeline-icon { @apply absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold z-10; }
+  @media (min-width: 768px) {
+    .timeline-item { @apply pl-0 w-1/2 mb-12; }
+    .timeline-item:nth-child(odd) { @apply self-end pl-12 text-left; }
+    .timeline-item:nth-child(even) { @apply self-start pr-12 text-right; }
+    .timeline-item:nth-child(odd) .timeline-icon { left: -20px; }
+    .timeline-item:nth-child(even) .timeline-icon { right: -20px; left: auto; }
+  }
+
+  /* Cards por edición */
+  .card-stage-masc { @apply bg-gradient-to-br from-celeste to-oscuro rounded-3xl overflow-hidden shadow-lg text-center transition-transform hover:-translate-y-2 flex flex-col; }
+  .card-stage-fem  { @apply bg-gradient-to-br from-rosa to-celeste rounded-3xl overflow-hidden shadow-lg text-center transition-transform hover:-translate-y-2 flex flex-col; }
+  .btn-video { @apply inline-flex items-center justify-center gap-2 bg-amarillo text-oscuro px-6 py-3 rounded-xl font-bold mt-4 hover:bg-white transition-colors; }
+
+  /* Modal video */
+  .video-modal-overlay {
+    @apply fixed inset-0 z-[1000] p-4 flex items-center justify-center;
+    background-color: hsla(242, 54%, 17%, 0.8);
+    backdrop-filter: blur(8px);
+  }
+  .video-modal-content { @apply relative bg-oscuro border-2 border-amarillo rounded-2xl p-4 w-full max-w-4xl shadow-2xl; }
+  .video-modal-close-button { @apply absolute -top-4 -right-4 bg-amarillo text-oscuro rounded-full w-9 h-9 text-2xl font-bold flex items-center justify-center cursor-pointer z-[1001]; }
+  .aspect-video { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; }
+  .aspect-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: .5rem; }
+
+  /* Utilidades A11y */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+  }
+  .focus\:not-sr-only:focus {
+    position: static; width: auto; height: auto; padding: 0; margin: 0; overflow: visible; clip: auto; white-space: normal;
+  }
+
+  /* Motion safe */
+  @media (prefers-reduced-motion: reduce) {
+    .edition-toggle, .tab-button, .btn-video { transition: none; }
+  }
+}
+
+/* =========================
+   TIMELINE HORIZONTAL (Recorrido)
+   ========================= */
+.timeline-container {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--color-celeste) var(--color-grisclaro);
+}
+.timeline-container::-webkit-scrollbar { height: 8px; }
+.timeline-container::-webkit-scrollbar-track {
+  background: var(--color-grisclaro);
+  border-radius: 4px;
+}
+.timeline-container::-webkit-scrollbar-thumb {
+  background: var(--color-celeste);
+  border-radius: 4px;
+}
+
+/* Ítems de etapa */
+.timeline-stage { min-width: 150px; }
+@media (min-width: 768px) {
+  .timeline-stage { min-width: auto; flex: 1; }
+}
+
+/* =========================
+   FICHA PARA HISTORIAS
+   ========================= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+
+/* Botones de Historia */
+.btn-historia {
+  @apply mt-4 px-6 py-3 border border-amarillo rounded-full text-amarillo font-bold text-sm uppercase tracking-wider transition-all duration-300 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-amarillo;
+}
+.btn-historia { @apply bg-amarillo bg-opacity-20; }
+.btn-historia:hover { @apply bg-opacity-30; }
+.btn-historia[aria-expanded="true"] .btn-arrow { transform: rotate(180deg); }
+
+
+
+/* Popup: transiciones suaves y respeto de reduce-motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-news-panel],
+  [data-news-overlay] {
+    transition: none !important;
+  }
+}
+
+/* (Opcional) Sombra “brand” si querés más presencia */
+.brand-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(38, 80, 161, .35); /* celeste #2650A1 */
+}

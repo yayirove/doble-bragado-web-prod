@@ -1,0 +1,85 @@
+---
+/**
+ * Uso:
+ * <TabGroup>
+ *   <div data-tab-title="Etapas">...</div>
+ *   <div data-tab-title="Mapa Interactivo">...</div>
+ *   <div data-tab-title="Ganadores">...</div>
+ * </TabGroup>
+ */
+const groupId = `tabs-${Math.random().toString(36).slice(2,7)}`;
+---
+<section class="ldb-tabs" data-group-id={groupId}>
+  <div class="tablist-wrapper">
+    <div class="tablist" role="tablist" aria-label="Secciones de esta edición"></div>
+  </div>
+  <div class="tab-panels">
+    <slot />
+  </div>
+
+  <script is:inline>
+    (() => {
+      const root = document.currentScript.closest('.ldb-tabs');
+      if (!root) return;
+      const tablist = root.querySelector('.tablist');
+      const panels = Array.from(root.querySelectorAll('.tab-panels > [data-tab-title]'));
+
+      panels.forEach((panel, i) => {
+        const title = panel.getAttribute('data-tab-title') || `Pestaña ${i+1}`;
+        const tabId = `${root.dataset.groupId}-tab-${i}`;
+        const panelId = `${root.dataset.groupId}-panel-${i}`;
+
+        // Crear botón de tab
+        const btn = document.createElement('button');
+        btn.className = 'tab-button';
+        btn.type = 'button';
+        btn.id = tabId;
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-controls', panelId);
+        btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+        btn.textContent = title;
+        tablist.appendChild(btn);
+
+        // Preparar panel
+        panel.id = panelId;
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', tabId);
+        panel.classList.add('tab-panel');
+        if (i === 0) panel.classList.add('active');
+      });
+
+      function activate(index) {
+        const buttons = Array.from(tablist.querySelectorAll('[role="tab"]'));
+        const panels = Array.from(root.querySelectorAll('.tab-panel'));
+        buttons.forEach((b, i) => {
+          const active = i === index;
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+          b.classList.toggle('active', active);
+        });
+        panels.forEach((p, i) => p.classList.toggle('active', i === index));
+        // Evitar salto de página al activar
+        const firstFocusable = root.querySelector('.tab-panel.active');
+        if (firstFocusable) firstFocusable.setAttribute('tabindex', '-1');
+      }
+
+      tablist.addEventListener('click', (e) => {
+        const idx = Array.from(tablist.children).indexOf(e.target);
+        if (idx >= 0) activate(idx);
+      });
+
+      // Teclado (izq/der/home/end)
+      tablist.addEventListener('keydown', (e) => {
+        const buttons = Array.from(tablist.querySelectorAll('[role="tab"]'));
+        const current = buttons.findIndex(b => b.getAttribute('aria-selected') === 'true');
+        if (['ArrowRight','ArrowLeft','Home','End'].includes(e.key)) e.preventDefault();
+        let next = current;
+        if (e.key === 'ArrowRight') next = (current + 1) % buttons.length;
+        if (e.key === 'ArrowLeft') next = (current - 1 + buttons.length) % buttons.length;
+        if (e.key === 'Home') next = 0;
+        if (e.key === 'End') next = buttons.length - 1;
+        activate(next);
+        buttons[next].focus();
+      });
+    })();
+  </script>
+</section>

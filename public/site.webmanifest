@@ -1,0 +1,9 @@
+{
+  "name": "La Doble Bragado",
+  "short_name": "LDB",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#171442"
+}

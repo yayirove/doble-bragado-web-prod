@@ -1,0 +1,118 @@
+---
+import TimelineGanadores from "./TimelineGanadores.jsx";
+---
+
+<!-- MODAL PALMARÉS (wrapper canónico) -->
+<div
+  id="palmaresModal"
+  class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center transition-all duration-300 backdrop-blur-sm opacity-0 invisible"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="palmaresModalTitle"
+  tabindex="-1"
+>
+  <!-- Botón cerrar (DESKTOP) -->
+  <button
+    type="button"
+    class="hidden md:flex absolute top-4 right-4 z-[60] p-2 rounded-full bg-white/10 hover:bg-white/20 text-white focus:outline-none focus:ring-2 focus:ring-amarillo/50"
+    data-close
+    aria-label="Cerrar"
+  >✕</button>
+
+  <!-- “Grabber” (handle visual para MOBILE + swipe) -->
+  <div class="md:hidden absolute top-2 left-1/2 -translate-x-1/2 z-[60]" aria-hidden="true">
+    <div class="h-1.5 w-12 rounded-full bg-white/70"></div>
+  </div>
+
+  <!-- Contenido: componente React embebido -->
+  <div class="w-full max-w-7xl max-h-[90vh] mx-4">
+    <TimelineGanadores client:load embedded />
+  </div>
+
+  <!-- Barra inferior MOBILE con botón Cerrar -->
+  <div class="md:hidden fixed inset-x-0 bottom-0 z-[60] p-4 pt-2 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60" style="padding-bottom: env(safe-area-inset-bottom)">
+    <button
+      type="button"
+      class="w-full bg-oscuro text-white font-semibold py-3 rounded-2xl shadow hover:bg-celeste focus:outline-none focus:ring-2 focus:ring-amarillo/50"
+      data-close
+    >Cerrar</button>
+    <p class="mt-2 text-center text-xs text-gris">También podés deslizar hacia abajo</p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("palmaresModal");
+    const openers = document.querySelectorAll('[data-open-palmares], #openTimelineBtn');
+    const closeBtns = modal?.querySelectorAll('[data-close]');
+    let focusedBefore;
+    let pushedState = false;
+
+    function isOpen() {
+      return modal?.classList.contains("opacity-100");
+    }
+
+    function open() {
+      focusedBefore = document.activeElement;
+      if (!isOpen()) {
+        try { history.pushState({ palmares: true }, "", location.href); pushedState = true; } catch {}
+      }
+      modal?.classList.remove("opacity-0", "invisible");
+      modal?.setAttribute("aria-hidden", "false");
+      modal?.classList.add("opacity-100", "visible");
+      document.body.style.overflow = "hidden";
+      modal?.focus?.();
+    }
+
+    function close({ fromPopstate = false } = {}) {
+      modal?.classList.add("opacity-0", "invisible");
+      modal?.setAttribute("aria-hidden", "true");
+      modal?.classList.remove("opacity-100", "visible");
+      document.body.style.overflow = "";
+      focusedBefore?.focus?.();
+      // Si lo cerramos por UI, volvemos un paso en el historial para “liberar” el estado pushState
+      if (!fromPopstate && pushedState) {
+        pushedState = false;
+        try { history.back(); } catch {}
+      }
+    }
+
+    // Triggers abrir
+    openers.forEach(btn => btn.addEventListener("click", (e) => { e.preventDefault?.(); open(); }));
+
+    // Botones cerrar (desktop + mobile)
+    closeBtns?.forEach(btn => btn.addEventListener("click", (e) => { e.stopPropagation(); close(); }));
+
+    // Cerrar por click en backdrop
+    modal?.addEventListener("click", (e) => { if (e.target === modal) close(); });
+
+    // Cerrar por ESC (principalmente desktop)
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen()) close(); });
+
+    // Swipe down para MOBILE
+    let startY = 0, startX = 0;
+    const SWIPE_Y = 60, SWIPE_X = 40; // umbrales
+    modal?.addEventListener("touchstart", (e) => {
+      const t = e.touches[0]; startY = t.clientY; startX = t.clientX;
+    }, { passive: true });
+    modal?.addEventListener("touchend", (e) => {
+      const t = e.changedTouches[0];
+      const dy = t.clientY - startY;
+      const dx = Math.abs(t.clientX - startX);
+      if (dy > SWIPE_Y && dx < SWIPE_X) close();
+    }, { passive: true });
+
+    // Deep-link: ?timeline
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("timeline")) open();
+
+    // Cerrar con botón “atrás” del sistema (Android/iOS)
+    window.addEventListener("popstate", () => {
+      if (isOpen()) close({ fromPopstate: true });
+    });
+
+    // API pública
+    window.PalmaresModal = { open, close, isOpen };
+  });
+</script>

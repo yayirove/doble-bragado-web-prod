@@ -1,0 +1,235 @@
+---
+// src/components/ContactoModal.astro
+// Modal "Mantenerme informado" + envío a Netlify (sin navegar)
+
+interface Props {
+  id?: string;
+  formName?: string;
+  title?: string;
+  subtitle?: string;
+}
+const {
+  id = "contacto-modal",
+  formName = "contacto-informado",
+  title = "Mantenerme informado",
+  subtitle = "Quiero recibir información sobre todas las novedades de La Doble Bragado.",
+} = Astro.props;
+---
+
+<div
+  id={id}
+  class="fixed inset-0 z-[190] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-500 ease-out"
+  aria-hidden="true"
+  role="dialog"
+  aria-labelledby="contacto-title"
+  aria-describedby="contacto-desc"
+>
+  <!-- Backdrop -->
+  <div id="contacto-backdrop" class="absolute inset-0 bg-oscuro/80 backdrop-blur-lg transition-opacity duration-500"></div>
+
+  <!-- Panel -->
+  <div
+    id="contacto-panel"
+    class="relative bg-gradient-to-br from-white via-white/98 to-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-oscuro/40 border border-amarillo/30 w-full max-w-md mx-4 transform scale-75 transition-all duration-500 ease-out"
+  >
+    <!-- Línea decorativa -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-celeste via-amarillo to-rosa rounded-t-3xl"></div>
+
+    <!-- Cerrar -->
+    <button
+      id="contacto-close"
+      type="button"
+      class="group absolute top-3 right-3 z-20 w-12 h-12 grid place-items-center rounded-full bg-white/90 hover:bg-white transition shadow-lg focus:outline-none focus:ring-4 focus:ring-amarillo/40"
+      aria-label="Cerrar modal"
+    >
+      <svg class="w-6 h-6 text-oscuro" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Body -->
+    <div class="p-8">
+      <div class="text-center mb-6">
+        <!-- Ícono cambiado: sobre carta/mail -->
+        <div class="w-16 h-16 bg-gradient-to-br from-celeste to-violeta rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="m3 7 9 6 9-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <h2 id="contacto-title" class="text-2xl font-bold text-violeta mb-2">{title}</h2>
+        <p id="contacto-desc" class="text-oscuro/70 text-sm leading-relaxed">{subtitle}</p>
+      </div>
+
+      <!-- Formulario Netlify -->
+      <form
+        id="contacto-form"
+        name={formName}
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        class="space-y-4"
+        aria-describedby="contacto-status"
+      >
+        <input type="hidden" name="form-name" value={formName} />
+        <p class="hidden"><label>Si sos humano no completes: <input name="bot-field" /></label></p>
+
+        <!-- Nombre -->
+        <div class="relative group">
+          <label for="contacto-nombre" class="block font-semibold mb-2 text-violeta group-focus-within:text-amarillo transition-colors">
+            Nombre
+          </label>
+          <input
+            type="text"
+            id="contacto-nombre"
+            name="nombre"
+            autocomplete="name"
+            class="w-full px-4 py-3 bg-white/90 backdrop-blur-sm border-2 border-grisclaro/40 rounded-2xl text-oscuro placeholder-oscuro/60 transition-all duration-300 focus:border-amarillo focus:ring-4 focus:ring-amarillo/20 focus:bg-white focus:outline-none hover:border-celeste/60"
+            placeholder="Tu nombre"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="relative group">
+          <label for="contacto-email" class="block font-semibold mb-2 text-violeta group-focus-within:text-amarillo transition-colors">
+            Email *
+          </label>
+          <input
+            type="email"
+            id="contacto-email"
+            name="email"
+            required
+            autocomplete="email"
+            class="w-full px-4 py-3 bg-white/90 backdrop-blur-sm border-2 border-grisclaro/40 rounded-2xl text-oscuro placeholder-oscuro/60 transition-all duración-300 focus:border-amarillo focus:ring-4 focus:ring-amarillo/20 focus:bg-white focus:outline-none hover:border-celeste/60"
+            placeholder="tu@email.com"
+          />
+        </div>
+
+        <!-- Enviar -->
+        <button
+          type="submit"
+          class="w-full group/btn relative overflow-hidden px-6 py-3 bg-gradient-to-r from-celeste to-violeta text-white font-semibold rounded-2xl shadow-lg shadow-celeste/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-violeta/40 focus:outline-none focus:ring-4 focus:ring-amarillo/40"
+        >
+          <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 -skew-x-12 transform -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out"></div>
+          <span class="relative z-10">Enviar</span>
+        </button>
+
+        <p id="contacto-status" class="text-xs text-oscuro/60 text-center leading-relaxed"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const root = document.getElementById("contacto-modal");
+    const panel = document.getElementById("contacto-panel");
+    const backdrop = document.getElementById("contacto-backdrop");
+    const closeBtn = document.getElementById("contacto-close");
+    const form = document.getElementById("contacto-form");
+    const status = document.getElementById("contacto-status");
+
+    let open = false;
+    let focusPrev = null;
+
+    const lockScroll = (yes) => {
+      if (yes) {
+        document.body.style.overflow = "hidden";
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${window.scrollY}px`;
+        document.body.style.width = "100%";
+      } else {
+        const y = document.body.style.top;
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        if (y) window.scrollTo(0, parseInt(y || "0") * -1);
+      }
+    };
+
+    const openModal = () => {
+      if (!root || open) return;
+      open = true;
+      focusPrev = document.activeElement;
+
+      root.classList.remove("opacity-0", "invisible");
+      root.setAttribute("aria-hidden", "false");
+      setTimeout(() => {
+        panel.style.transform = "scale(1)";
+        backdrop.style.opacity = "1";
+      }, 50);
+      lockScroll(true);
+
+      setTimeout(() => {
+        const first = root.querySelector("input:not([type='hidden'])");
+        first?.focus();
+      }, 250);
+    };
+
+    const closeModal = () => {
+      if (!root || !open) return;
+      open = false;
+
+      panel.style.transform = "scale(0.75)";
+      backdrop.style.opacity = "0";
+      setTimeout(() => {
+        root.classList.add("opacity-0", "invisible");
+        root.setAttribute("aria-hidden", "true");
+      }, 300);
+
+      lockScroll(false);
+      focusPrev?.focus?.();
+    };
+
+    // Eventos UI
+    closeBtn?.addEventListener("click", closeModal);
+    backdrop?.addEventListener("click", closeModal);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && open) closeModal(); });
+
+    // Evento global para abrir desde el Header
+    window.addEventListener("openContactoModal", openModal);
+
+    // (Opcional) API global para debug
+    window.__openContactoModal = openModal;
+    window.__closeContactoModal = closeModal;
+
+    // Envío Netlify (AJAX)
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        status.textContent = "Enviando...";
+        status.className = "text-xs text-amarillo text-center";
+
+        try {
+          const formData = new FormData(form);
+          if (!formData.get("form-name")) formData.set("form-name", form.getAttribute("name") || "contacto-informado");
+
+          await fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData).toString(),
+          });
+
+          status.textContent = "¡Gracias! Recibimos tus datos.";
+          status.className = "text-xs text-green-600 text-center";
+          form.reset();
+
+          setTimeout(() => {
+            status.textContent = "";
+            closeModal();
+          }, 1800);
+        } catch (err) {
+          console.error(err);
+          status.textContent = "Hubo un error. Probá nuevamente.";
+          status.className = "text-xs text-red-600 text-center";
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  /* sin CSS dinámico: Tailwind/utility ya gestiona visibilidad y animación */
+</style>

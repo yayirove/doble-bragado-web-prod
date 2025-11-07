@@ -1,0 +1,130 @@
+---
+// src/components/NewsPopup.astro
+interface Props {
+  title?: string;
+  subtitle?: string;
+  formSrc?: string; // opcional, se mantiene por compatibilidad
+  id?: string;
+}
+const {
+  title = "Está abierta la inscripción para la 3ra edición de la Doble Bragado Femenina",
+  subtitle = "Doble Bragado Femenina - 3era. Edición",
+  formSrc = "",
+  id = "news-popup"
+} = Astro.props;
+---
+
+<!-- POPUP GLOBAL DE NOTICIA (teaser → abre InscripcionModal) -->
+<div id={id} class="fixed inset-0 z-[170] hidden" data-news-popup aria-hidden="true">
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-200 ease-out" data-news-overlay data-close></div>
+
+  <!-- Panel -->
+  <div
+    class="relative mx-auto my-4 w-[96%] max-w-4xl rounded-2xl overflow-hidden shadow-2xl
+           bg-white text-[#333333] md:my-16 opacity-0 translate-y-4 transition-all duration-200 ease-out"
+    role="dialog" aria-modal="true" aria-labelledby="np-title" aria-describedby="np-desc" data-news-panel
+  >
+    <!-- Header -->
+    <div class="p-5 md:p-6 bg-gradient-to-r from-celeste to-rosa text-white">
+      <p class="text-xs font-semibold tracking-wide uppercase text-[#F7E200]">Noticia</p>
+      <h3 id="np-title" class="mt-1 font-black text-xl md:text-2xl leading-tight">
+        Abierta la inscripción
+      </h3>
+      <p id="np-desc" class="mt-1 text-mt opacity-90">{subtitle}</p>
+    </div>
+
+    <!-- Cuerpo -->
+    <div class="p-5 md:p-6 space-y-4">
+      <p class="text-sm">
+        <strong>12, 13 y 14 de Diciembre</strong>. Completá el formulario para asegurar tu lugar. Podés inscribirte individual o en equipo.
+      </p>
+
+      <div class="flex items-center gap-3">
+        <button type="button"
+          class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl font-semibold
+                 bg-[#2650A1] text-white hover:opacity-95 focus:outline-none focus-visible:ring-4
+                 ring-offset-2 ring-offset-white ring-[#2650A1]/40 transition"
+          data-action="open-inscripcion">
+          Clic para inscribirte
+        </button>
+
+        <button type="button"
+          class="text-xs underline underline-offset-2 opacity-70 hover:opacity-100"
+          data-action="dismiss">
+          No mostrar nuevamente
+        </button>
+      </div>
+    </div>
+
+    <!-- Cerrar -->
+    <button
+      type="button"
+      class="absolute top-3 right-3 inline-flex items-center justify-center w-10 h-10
+             rounded-full bg-white/90 text-[#171442] shadow hover:bg-white"
+      aria-label="Cerrar" data-close>
+      ✕
+    </button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const root = document.querySelector('[data-news-popup]');
+    if (!root || root.dataset.bound === '1') return;
+    root.dataset.bound = '1';
+
+    const overlay   = root.querySelector('[data-news-overlay]');
+    const panel     = root.querySelector('[data-news-panel]');
+    const btnOpen   = root.querySelector('[data-action="open-inscripcion"]');
+    const btnDismiss= root.querySelector('[data-action="dismiss"]');
+    const btnCloses = root.querySelectorAll('[data-close]');
+
+    // Clave persistente (una sola vez por navegador)
+    const KEY = 'np-seen-v1';
+
+    const show = () => {
+      root.classList.remove('hidden');
+      root.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+        panel.style.opacity = '1';
+        panel.style.transform = 'translateY(0)';
+      });
+      // Marcar como visto inmediatamente (evita re-aparecer al navegar o volver)
+      try { localStorage.setItem(KEY, '1'); } catch {}
+    };
+
+    const hide = () => {
+      overlay.style.opacity = '0';
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateY(1rem)';
+      setTimeout(() => {
+        root.classList.add('hidden');
+        root.setAttribute('aria-hidden', 'true');
+      }, 180);
+    };
+
+    // Mostrar SOLO si nunca se vio
+    let shouldShow = false;
+    try { shouldShow = localStorage.getItem(KEY) !== '1'; } catch { shouldShow = true; }
+    if (shouldShow) setTimeout(show, 800);
+
+    // Acciones
+    btnOpen?.addEventListener('click', () => {
+      hide();
+      window.dispatchEvent(new CustomEvent('openInscripcionModal'));
+    });
+
+    btnCloses.forEach(el => el.addEventListener('click', hide));
+    overlay?.addEventListener('click', hide);
+
+    btnDismiss?.addEventListener('click', () => {
+      try { localStorage.setItem(KEY, '1'); } catch {}
+      hide();
+    });
+
+    // Si se abre el modal de inscripción por otro lado, cerramos el popup
+    window.addEventListener('inscripcionModal:open', hide);
+  })();
+</script>

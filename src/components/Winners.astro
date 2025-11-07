@@ -1,0 +1,108 @@
+---
+/* COMPONENTE PURO — NO BaseLayout, NO <html>, NO imports circulares */
+import Icon from "../components/Icon.astro";
+
+/** Datos de ejemplo: editá los textos marcados con 🔧 */
+const winnersMasculina = [
+  { jersey: "Líder General", teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre del corredor", color: "bg-amarillo text-oscuro" },
+  { jersey: "Sprinter",      teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre del corredor", color: "bg-celeste text-white" },
+  { jersey: "Montaña",       teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre del corredor", color: "bg-violeta text-white" },
+  { jersey: "Sub 23",        teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre del corredor", color: "bg-oscuro text-white" },
+  { jersey: "Meta Sprint",   teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre del corredor", color: "bg-rosa text-white" },
+];
+
+const winnersFemenina = [
+  { jersey: "Líder General", teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre de la corredora", color: "bg-amarillo text-oscuro" },
+  { jersey: "Sprinter",      teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre de la corredora", color: "bg-celeste text-white" },
+  { jersey: "Montaña",       teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre de la corredora", color: "bg-violeta text-white" },
+  { jersey: "Sub 23",        teamOrRole: "🔧 Equipo / Rol", name: "🔧 Nombre de la corredora", color: "bg-oscuro text-white" },
+];
+---
+
+<section id="ganadores" class="py-20 bg-white" aria-labelledby="ganadores-title">
+  <div class="max-w-7xl mx-auto px-6">
+    <header class="text-center mb-10">
+      <h2 id="ganadores-title" class="font-display font-black text-4xl md:text-5xl text-oscuro uppercase">
+        Ganadores
+      </h2>
+      <p class="text-gris mt-2">Seleccioná Masculina o Femenina. Editá los nombres 🔧 en este componente.</p>
+    </header>
+
+    <!-- Selector (mismo look & feel que “Reviví las Etapas”) -->
+    <div class="flex justify-center mb-8">
+      <div class="inline-flex bg-grisclaro rounded-full shadow p-1" role="tablist" aria-label="Selector de categoría">
+        <button id="win-tab-masc" class="relative px-6 py-2 rounded-full font-semibold text-oscuro/80 transition-all">
+          <span class="relative z-10">Masculina</span>
+          <span class="win-indicator absolute inset-0 bg-gradient-to-r from-celeste to-celeste rounded-full opacity-0"></span>
+        </button>
+        <button id="win-tab-fem" class="relative px-6 py-2 rounded-full font-semibold text-oscuro/80 transition-all">
+          <span class="relative z-10">Femenina</span>
+          <span class="win-indicator absolute inset-0 bg-gradient-to-r from-violeta to-rosa rounded-full opacity-0"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Panel MASC -->
+    <div id="win-panel-masc" role="tabpanel" aria-labelledby="win-tab-masc">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          winnersMasculina.map((w) => (
+            <article class="rounded-2xl p-5 bg-white shadow border border-black/5">
+              <header class="flex items-center gap-3 mb-3">
+                <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${w.color}`}>{w.jersey}</span>
+                <span class="text-xs text-gris/80 font-semibold">{w.teamOrRole}</span>
+              </header>
+              <h3 class="text-xl font-extrabold text-oscuro">{w.name}</h3>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Panel FEM -->
+    <div id="win-panel-fem" class="hidden" role="tabpanel" aria-labelledby="win-tab-fem">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          winnersFemenina.map((w) => (
+            <article class="rounded-2xl p-5 bg-white shadow border border-black/5">
+              <header class="flex items-center gap-3 mb-3">
+                <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${w.color}`}>{w.jersey}</span>
+                <span class="text-xs text-gris/80 font-semibold">{w.teamOrRole}</span>
+              </header>
+              <h3 class="text-xl font-extrabold text-oscuro">{w.name}</h3>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Script del selector -->
+<script is:inline>
+  (function () {
+    const tabMasc = document.getElementById('win-tab-masc');
+    const tabFem  = document.getElementById('win-tab-fem');
+    const panelMasc = document.getElementById('win-panel-masc');
+    const panelFem  = document.getElementById('win-panel-fem');
+
+    function setWinEdition(isMasc) {
+      const i1 = tabMasc?.querySelector('.win-indicator');
+      const i2 = tabFem?.querySelector('.win-indicator');
+
+      if (i1) i1.style.opacity = isMasc ? '1' : '0';
+      if (i2) i2.style.opacity = isMasc ? '0' : '1';
+      tabMasc?.classList.toggle('text-white', isMasc);
+      tabFem?.classList.toggle('text-white', !isMasc);
+
+      panelMasc?.classList.toggle('hidden', !isMasc);
+      panelFem?.classList.toggle('hidden', isMasc);
+    }
+
+    tabMasc?.addEventListener('click', () => setWinEdition(true));
+    tabFem?.addEventListener('click',  () => setWinEdition(false));
+
+    // init
+    setWinEdition(true);
+  })();
+</script>

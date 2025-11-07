@@ -1,0 +1,120 @@
+---
+interface Props {
+  /** SOLO el ID del form (entre /d/e/ y /viewform) */
+  formId?: string;
+  /** Opcional: z-index por si necesitás sobreponer otros modales */
+  zIndex?: number;
+}
+const {
+  formId = "",
+  zIndex = 210, // por encima del yt-modal (200)
+} = Astro.props;
+
+const embedSrc = formId
+  ? `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`
+  : "";
+---
+
+<div
+  id="inscripcion-modal"
+  class="fixed inset-0 hidden items-center justify-center p-2 sm:p-4"
+  style={`z-index:${zIndex};`}
+  aria-hidden="true"
+  role="dialog"
+  aria-labelledby="ins-title"
+>
+  <!-- Backdrop (cierra al click) -->
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" data-close></div>
+
+  <!-- Panel: alto casi completo con scroll interno -->
+  <div
+    class="relative w-full max-w-6xl bg-white rounded-2xl overflow-hidden shadow-2xl h-[92vh] md:h-[90vh] grid"
+    role="document"
+  >
+    <!-- Header del modal -->
+    <div class="relative z-10 flex items-center justify-between px-4 py-3 border-b border-black/10 bg-white/95">
+      <h2 id="ins-title" class="text-base sm:text-lg font-semibold text-[#171442]">
+        Formulario de inscripción
+      </h2>
+      <button
+        type="button"
+        data-close
+        aria-label="Cerrar"
+        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/90 text-[#171442] shadow hover:scale-105 transition"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Contenedor scroll (el iframe ocupa el resto del alto) -->
+    <div class="relative z-0 overflow-auto">
+      <iframe
+        id="inscripcion-iframe"
+        class="block w-full h-[calc(92vh-56px)] md:h-[calc(90vh-56px)]"
+        src={embedSrc}               <!-- src directo: evita pantallas en blanco -->
+        title="Formulario de inscripción"
+        loading="eager"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function(){
+    const root = document.getElementById('inscripcion-modal');
+    if(!root) return;
+
+    const overlay = root.querySelector('[data-close]');
+    const closeBtn = root.querySelector('button[data-close]');
+
+    const emit = (name) => window.dispatchEvent(new CustomEvent(name));
+
+    const lockScroll = () => {
+      document.body.dataset.scrollY = String(window.scrollY);
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${window.scrollY}px`;
+      document.body.style.width = '100%';
+    };
+    const unlockScroll = () => {
+      const y = parseInt(document.body.dataset.scrollY || '0',10) || 0;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, y);
+    };
+
+    const open = () => {
+      root.classList.remove('hidden');
+      root.classList.add('flex');
+      root.setAttribute('aria-hidden','false');
+      lockScroll();
+      emit('inscripcionModal:open');
+    };
+
+    const close = () => {
+      root.classList.add('hidden');
+      root.classList.remove('flex');
+      root.setAttribute('aria-hidden','true');
+      unlockScroll();
+      emit('inscripcionModal:close');
+    };
+
+    // Cierres
+    overlay?.addEventListener('click', close);
+    closeBtn?.addEventListener('click', close);
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+
+    // Abrir por evento global
+    window.addEventListener('openInscripcionModal', open);
+
+    // Si se abre el newsletter, cerramos inscripción para no superponer
+    window.addEventListener('newsletterModal:open', close);
+  })();
+</script>
+
+<style>
+  @media (max-width: 640px) {
+    #inscripcion-modal .rounded-2xl { border-radius: 1rem; }
+  }
+</style>

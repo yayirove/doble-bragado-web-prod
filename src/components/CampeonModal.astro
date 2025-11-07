@@ -1,0 +1,153 @@
+---
+// CampeonModal.astro — layout: (md+) Crónica izquierda · (md+) Foto+Ficha derecha
+// En mobile: foto → ficha → crónica
+
+export interface Props {
+  id: string;
+  foto: string;
+  nombre: string;
+  titulo?: string; // título personalizado
+  ficha: {
+    nacimiento?: string;
+    // residencia?: string;  // REMOVIDO
+    inicios?: string;
+    hito?: string;
+  };
+  cronica: string[];
+}
+
+const { id, foto, nombre, titulo = "Historia del Campeón", ficha, cronica } = Astro.props;
+---
+
+<!-- Modal Overlay -->
+<div 
+  id={`modal-${id}`} 
+  class="modal-overlay hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+  data-modal-overlay
+>
+  <!-- Background oscuro con blur -->
+  <div class="absolute inset-0 bg-oscuro/80 backdrop-blur-sm" data-modal-backdrop></div>
+  
+  <!-- Modal Content -->
+  <div class="modal-content relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-oscuro/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-amarillo/20">
+    
+    <!-- Header con botón cerrar -->
+    <div class="sticky top-0 z-10 bg-oscuro/90 backdrop-blur-xl border-b border-amarillo/20 p-6 flex justify-between items-center">
+      <h3 class="text-2xl font-bold text-amarillo uppercase">{titulo}</h3>
+      <button 
+        class="close-modal w-10 h-10 rounded-full bg-amarillo/20 hover:bg-amarillo/30 border border-amarillo/40 flex items-center justify-center transition-all duration-300 hover:scale-110"
+        aria-label="Cerrar ventana"
+        data-close-modal
+        type="button"
+      >
+        <svg class="w-6 h-6 text-amarillo" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Body del modal -->
+    <div class="p-8">
+      <!-- Grid general: en md+ son 5 columnas; la crónica ocupa 3, foto+ficha 2 -->
+      <div class="grid md:grid-cols-5 gap-8 items-stretch">
+        <!-- Derecha en md+: FOTO + FICHA apiladas (en mobile aparecen primero: foto→ficha) -->
+        <div class="order-1 md:order-2 md:col-span-2 md:h-full min-h-0 grid md:grid-rows-[auto,1fr] gap-6">
+          <!-- Foto -->
+          <div class="relative rounded-2xl overflow-hidden shadow-xl">
+            <img 
+              src={foto}
+              alt={`${nombre}, campeón de La Doble Bragado`}
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+
+          <!-- Ficha (llena el espacio restante; si se excede, scrollea) -->
+          <div class="bg-grisclaro/10 backdrop-blur-sm rounded-2xl p-6 border border-amarillo/30 md:h-full min-h-0 overflow-auto">
+            <h4 class="text-2xl font-bold text-amarillo mb-6">{nombre}</h4>
+            {!(ficha?.nacimiento || ficha?.inicios || ficha?.hito) ? (
+              <p class="text-grisclaro leading-relaxed text-base">
+                (Ficha pendiente) — Agregaremos nacimiento, inicios e hitos cuando estén disponibles.
+              </p>
+            ) : (
+              <ul class="space-y-4 text-base">
+                {ficha.nacimiento && (
+                  <li class="text-grisclaro">
+                    <strong class="text-white block mb-1">Nacimiento:</strong> 
+                    <span class="text-grisclaro/90">{ficha.nacimiento}</span>
+                  </li>
+                )}
+                {ficha.inicios && (
+                  <li class="text-grisclaro">
+                    <strong class="text-white block mb-1">Inicios en competencia:</strong> 
+                    <span class="text-grisclaro/90">{ficha.inicios}</span>
+                  </li>
+                )}
+                {ficha.hito && (
+                  <li class="text-grisclaro">
+                    <strong class="text-white block mb-1">Hito internacional:</strong> 
+                    <span class="text-grisclaro/90">{ficha.hito}</span>
+                  </li>
+                )}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        <!-- Izquierda en md+: CRÓNICA (ocupa 3 columnas y define la altura) -->
+        <div class="order-2 md:order-1 md:col-span-3 h-full">
+          <div class="h-full bg-gradient-to-r from-amarillo/10 to-rosa/10 backdrop-blur-sm rounded-2xl p-8 border-l-4 border-amarillo">
+            <h4 class="text-xl font-bold text-amarillo mb-4 uppercase">La Crónica</h4>
+            {cronica && cronica.length > 0 ? (
+              cronica.map((parrafo) => (
+                <p class="text-grisclaro leading-relaxed mb-6 last:mb-0 italic text-base">
+                  {parrafo}
+                </p>
+              ))
+            ) : (
+              <p class="text-grisclaro leading-relaxed italic text-base">
+                (Crónica pendiente) — Aquí irá el relato narrativo del/la campeón/ona.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-overlay {
+    animation: fadeIn 0.3s ease-out;
+  }
+  .modal-overlay.hidden {
+    display: none !important;
+  }
+  .modal-content {
+    animation: slideUp 0.3s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  /* Smooth scroll para el contenido del modal */
+  .modal-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 221, 0, 0.3) transparent;
+  }
+  .modal-content::-webkit-scrollbar { width: 8px; }
+  .modal-content::-webkit-scrollbar-track { background: transparent; }
+  .modal-content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 221, 0, 0.3);
+    border-radius: 4px;
+  }
+  /* Body no-scroll class */
+  :global(body.modal-open) {
+    overflow: hidden;
+  }
+</style>

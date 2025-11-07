@@ -1,0 +1,42 @@
+---
+const label = "Inscribite a la 3ra edición femenina";
+---
+
+<button
+  id="floating-cta"
+  class="fixed right-4 bottom-4 z-[60] px-5 py-3 rounded-2xl bg-amarillo text-oscuro font-semibold shadow-lg shadow-amarillo/30 border border-oscuro/10
+         hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200
+         focus:outline-none focus:ring-2 focus:ring-amarillo/80
+         max-w-[90vw] text-sm md:text-base"
+  aria-label={label}
+  type="button"
+>
+  {label}
+</button>
+
+<style>
+  #floating-cta { bottom: calc(1rem + env(safe-area-inset-bottom)); }
+  @media (min-width: 768px) { #floating-cta { right: 1.25rem; } }
+  @media (prefers-reduced-motion: reduce) { #floating-cta { transition: none; } }
+</style>
+
+<script is:inline>
+  (function(){
+    const btn = document.getElementById('floating-cta');
+    if(!btn) return;
+
+    // Abrir el modal de INSCRIPCIÓN (Google Form)
+    btn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('openInscripcionModal'));
+    });
+
+    // Ocultar cuando cualquier modal esté abierto; mostrar al cerrar
+    const hide = () => btn.style.display = 'none';
+    const show = () => btn.style.display = '';
+
+    window.addEventListener('inscripcionModal:open', hide);
+    window.addEventListener('inscripcionModal:close', show);
+    window.addEventListener('newsletterModal:open', hide);
+    window.addEventListener('newsletterModal:close', show);
+  })();
+</script>

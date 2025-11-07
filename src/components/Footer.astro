@@ -1,0 +1,248 @@
+---
+// src/components/Footer.astro
+const currentYear = new Date().getFullYear();
+---
+
+<footer
+  class="relative bg-gradient-to-br from-oscuro via-oscuro/95 to-oscuro/90 text-white border-top border-amarillo/30 backdrop-blur-xl overflow-hidden"
+  role="contentinfo"
+>
+  <!-- Línea decorativa superior -->
+  <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-amarillo to-transparent"></div>
+
+  <!-- Overlay sutil -->
+  <div class="absolute inset-0 bg-gradient-to-br from-celeste/5 via-transparent to-amarillo/5 pointer-events-none"></div>
+
+  <!-- Contenido -->
+  <div class="relative z-10 max-w-7xl mx-auto px-8 py-16">
+    <!-- Mantengo 3 columnas en desktop, pero con Newsletter oculto -->
+    <div class="grid md:grid-cols-3 gap-12 mb-12">
+      <!-- Seguinos -->
+      <section aria-labelledby="footer-redes-title" class="md:col-start-1 md:row-start-1 md:justify-self-start">
+        <div class="relative">
+          <h3 id="footer-redes-title" class="text-amarillo mb-6 font-bold text-xl relative">
+            Seguinos
+            <span class="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-amarillo to-transparent rounded-full"></span>
+          </h3>
+
+          <div class="flex justify-start gap-4">
+            <a
+              href="https://instagram.com/ladoblebragado"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group relative w-14 h-14 bg-gradient-to-br from-celeste via-celeste/90 to-celeste/80 rounded-2xl flex items-center justify-center text-white transition-all duration-500 hover:scale-110 hover:rotate-3 focus:outline-none focus:ring-2 focus:ring-amarillo/60 focus:ring-offset-2 focus:ring-offset-oscuro"
+              aria-label="Instagram de La Doble Bragado (se abre en otra pestaña)"
+            >
+              <div class="absolute inset-0 bg-gradient-to-r from-amarillo/20 to-celeste/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-125"></div>
+              <svg class="relative z-10 w-6 h-6 transition-all duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm0 2.5A3.5 3.5 0 1 0 12 16a3.5 3.5 0 0 0 0-7.5ZM18 6.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/>
+              </svg>
+              <span class="absolute -top-1 -right-1 w-3 h-3 bg-amarillo rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></span>
+            </a>
+
+            <a
+              href="https://youtube.com/@ladoblebragado"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group relative w-14 h-14 bg-gradient-to-br from-celeste via-celeste/90 to-celeste/80 rounded-2xl flex items-center justify-center text-white transition-all duration-500 hover:scale-110 hover:rotate-3 focus:outline-none focus:ring-2 focus:ring-amarillo/60 focus:ring-offset-2 focus:ring-offset-oscuro"
+              aria-label="YouTube de La Doble Bragado (se abre en otra pestaña)"
+            >
+              <div class="absolute inset-0 bg-gradient-to-r from-amarillo/20 to-celeste/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-125"></div>
+              <svg class="relative z-10 w-6 h-6 transition-all duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8ZM9.5 15.6V8.4L15.8 12 9.5 15.6Z"/>
+              </svg>
+              <span class="absolute -top-1 -right-1 w-3 h-3 bg-amarillo rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Newsletter (OCULTO TEMPORALMENTE) -->
+      <!-- Para reactivar: quitar la clase 'hidden' y (opcional) volver a 3 columnas reales -->
+      <section aria-labelledby="footer-newsletter-title" class="hidden md:col-start-2 md:row-start-1">
+        <div class="relative">
+          <h3 id="footer-newsletter-title" class="text-amarillo mb-6 font-bold text-xl relative">
+            Newsletter
+            <span class="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-amarillo to-transparent rounded-full"></span>
+          </h3>
+
+          <form class="relative group" action="#" method="post" novalidate aria-describedby="newsletter-status">
+            <div class="absolute inset-0 bg-gradient-to-r from-celeste/20 to-amarillo/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-105"></div>
+
+            <div class="relative flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 group-hover:border-amarillo/40 focus-within:border-amarillo/60 focus-within:ring-2 focus-within:ring-amarillo/20">
+              <label for="newsletter-email" class="sr-only">Email</label>
+              <input
+                id="newsletter-email"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                placeholder="tu@email.com"
+                required
+                class="flex-1 px-4 py-3 bg-transparent text-white placeholder-white/60 border-none outline-none focus:ring-0"
+              />
+              <button
+                type="submit"
+                class="bg-gradient-to-r from-amarillo to-amarillo/90 text-oscuro px-6 py-3 font-semibold transition-all duration-300 hover:from-amarillo/90 hover:to-amarillo hover:shadow-lg hover:shadow-amarillo/30 focus:outline-none focus:ring-2 focus:ring-amarillo/60 focus:ring-offset-2 focus:ring-offset-transparent"
+              >
+                <span class="flex items-center gap-2">
+                  Suscribirse
+                  <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </form>
+
+          <p id="newsletter-status" class="mt-3 text-sm text-white/60" aria-live="polite"></p>
+          <p class="text-white/70 text-sm mb-6 leading-relaxed">Recibí las últimas noticias y actualizaciones sobre La Doble Bragado.</p>
+        </div>
+      </section>
+
+      <!-- Contacto (texto informativo, sin hover ni link) -->
+      <section aria-labelledby="footer-contacto-title" class="md:col-start-3 md:row-start-1 md:justify-self-end md:text-right">
+        <div class="relative">
+          <h3 id="footer-contacto-title" class="text-amarillo mb-6 font-bold text-xl relative md:text-right">
+            Contacto directo
+            <span class="absolute -bottom-2 right-0 md:right-0 left-0 md:left-auto w-12 h-0.5 bg-gradient-to-l md:bg-gradient-to-r from-amarillo to-transparent rounded-full"></span>
+          </h3>
+
+          <div class="flex items-center justify-center md:justify-end w-full">
+            <div class="relative w-full">
+              <div class="relative flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl px-4 h-[52px] w-full">
+                <div class="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-amarillo to-amarillo/80 rounded-xl mr-3 flex-shrink-0">
+                  <svg class="w-5 h-5 text-oscuro" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+                  </svg>
+                </div>
+
+                <!-- Texto plano (sin enlace) -->
+                <span class="text-white/90 font-medium truncate select-text">
+                  info@ladoblebragado.com.ar
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom -->
+    <div class="relative border-t border-white/20 pt-8">
+      <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-0.5 bg-gradient-to-r from-transparent via-amarillo/60 to-transparent"></div>
+
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <!-- Copyright -->
+        <div class="relative">
+          <p class="text-sm text-white/70 leading-relaxed">
+            © {currentYear} El Mariachi — Desarrollado con autorización del
+            <span class="text-amarillo font-medium"> Club Ciclista Nación</span>
+          </p>
+        </div>
+
+        <!-- Logo Nación -->
+        <div class="relative">
+          <div class="bg-gradient-to-br from-white via-white/95 to-white/90 backdrop-blur-sm rounded-2xl shadow-lg shadow-black/10 ring-1 ring-white/10 px-4 py-3">
+            <img
+              src="/images/ldb-logo-nacion-v2.svg"
+              alt="Club Ciclista Nación"
+              class="h-8 md:h-10 w-auto"
+              loading="lazy"
+              decoding="async"
+              style="filter: none;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const statusElement = document.getElementById('newsletter-status');
+      const newsletterForm = document.querySelector('form[action="#"]');
+      const socialLinks = document.querySelectorAll('footer a[target="_blank"]');
+
+      // Newsletter (queda inactivo por estar oculto, pero el handler es inofensivo)
+      if (newsletterForm && statusElement) {
+        newsletterForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const formData = new FormData(newsletterForm);
+          const email = formData.get('email');
+
+          if (!email) {
+            statusElement.textContent = 'Por favor ingresa un email válido.';
+            statusElement.className = 'mt-3 text-sm text-red-400';
+            return;
+          }
+
+          statusElement.textContent = 'Suscribiendo...';
+          statusElement.className = 'mt-3 text-sm text-amarillo';
+
+          setTimeout(() => {
+            statusElement.textContent = '¡Suscripción exitosa! Revisa tu email.';
+            statusElement.className = 'mt-3 text-sm text-green-400';
+            newsletterForm.reset();
+            setTimeout(() => { statusElement.textContent = ''; }, 5000);
+          }, 1500);
+        });
+      }
+
+      // Feedback visual en íconos sociales
+      socialLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          const indicator = link.querySelector('span.animate-pulse');
+          if (indicator) {
+            indicator.style.animation = 'pulse 0.3s ease-in-out';
+            setTimeout(() => { indicator.style.animation = ''; }, 300);
+          }
+        });
+      });
+
+      // Reveal de secciones
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      const footerSections = document.querySelectorAll('footer section');
+      footerSections.forEach((section, index) => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = `opacity 0.8s ease-out ${index * 0.2}s, transform 0.8s ease-out ${index * 0.2}s`;
+        observer.observe(section);
+      });
+    });
+  </script>
+
+  <style>
+    /* Glassmorphism sutil */
+    footer::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(247, 226, 0, 0.06) 100%);
+      pointer-events: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      footer section h3 span { left: 0 !important; right: auto !important; }
+      footer .md\:justify-self-end { justify-self: start !important; text-align: left !important; }
+    }
+
+    /* Focus */
+    footer a:focus-visible,
+    footer button:focus-visible,
+    footer input:focus-visible {
+      outline: 2px solid rgba(247, 226, 0, 0.8);
+      outline-offset: 2px;
+      border-radius: 12px;
+    }
+  </style>
+</footer>

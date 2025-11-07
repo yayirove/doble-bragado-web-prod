@@ -1,0 +1,5 @@
+nodeLinker: hoisted
+
+packageImportMethod: copy
+
+preferHardLinking: false

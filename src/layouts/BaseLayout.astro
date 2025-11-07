@@ -1,0 +1,292 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import NewsletterModal from "../components/NewsletterModal.astro";
+import FloatingCTA from "../components/FloatingCTA.astro";
+import NewsPopup from "../components/NewsPopup.astro";
+import InscripcionModal from "../components/InscripcionModal.astro";
+import ContactoModal from "../components/ContactoModal.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonicalURL?: string;
+  structuredData?: any;
+  noindex?: boolean;
+  ogType?: string;
+  keywords?: string;
+  geo?: {
+    region?: string;
+    placename?: string;
+    position?: string;
+    icbm?: string;
+  };
+  useTypekit?: boolean;
+}
+
+const {
+  title = "La Doble Bragado",
+  description = "La Vuelta Histórica de Ciclismo en Buenos Aires. Más de 500km de recorrido uniendo ciudades bonaerenses. La carrera de ciclismo más antigua de Argentina.",
+  ogImage = "/images/og-image-v2.jpg",
+  canonicalURL,
+  structuredData = null,
+  ogType = "website",
+  keywords,
+  useTypekit = false,
+  geo = {
+    region: "AR-BA",
+    placename: "Bragado, Buenos Aires, Argentina",
+    position: "-35.1167;-60.4833",
+    icbm: "-35.1167, -60.4833",
+  },
+  // noindex: fuera de prod o en dominio distinto al oficial
+  noindex = (import.meta.env.MODE !== "production") || (Astro.url.hostname !== "ladoblebragado.com.ar"),
+} = Astro.props;
+
+/* URLs base + helpers */
+const siteHref = (Astro.site && Astro.site.href) || "https://ladoblebragado.com.ar/";
+const baseURL = siteHref.endsWith("/") ? siteHref : siteHref + "/";
+const normalizeUrl = (u: string) => {
+  const url = new URL(u, baseURL);
+  url.hash = "";
+  url.search = "";
+  const href = url.href;
+  return (href.endsWith("/") && url.pathname !== "/") ? href.slice(0, -1) : href;
+};
+
+const seoTitle = (title === "La Doble Bragado")
+  ? `${title} — Vuelta histórica de ciclismo en Buenos Aires`
+  : `${title} — La Doble Bragado`;
+
+const fullImageURL = new URL(ogImage, baseURL).href;
+const currentCanonicalURL = normalizeUrl(canonicalURL ?? new URL(Astro.url.pathname, baseURL).href);
+
+/* JSON-LD base */
+const orgId = `${baseURL}#organization`;
+const websiteId = `${baseURL}#website`;
+const webpageId = `${currentCanonicalURL}#webpage`;
+
+const defaultSchemas: any[] = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": orgId,
+    "name": "La Doble Bragado",
+    "url": baseURL,
+    "logo": new URL("/images/ldb-logo-v3.svg", baseURL).href,
+    "sameAs": [
+      "https://www.instagram.com/ladoblebragado/",
+      "https://www.youtube.com/@ladoblebragado"
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": websiteId,
+    "url": baseURL,
+    "name": "La Doble Bragado",
+    "inLanguage": "es-AR",
+    "publisher": { "@id": orgId },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": { "@type": "EntryPoint", "urlTemplate": `${baseURL}search?q={search_term_string}` },
+      "query-input": "required name=search_term_string"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": webpageId,
+    "url": currentCanonicalURL,
+    "name": seoTitle,
+    "description": description,
+    "inLanguage": "es-AR",
+    "isPartOf": { "@id": websiteId }
+  },
+  (() => {
+    const parts = Astro.url.pathname.split("/").filter(Boolean);
+    const items = [{ "@type": "ListItem", "position": 1, "name": "Inicio", "item": baseURL }];
+    if (parts.length > 0) items.push({ "@type": "ListItem", "position": 2", "name": title, "item": currentCanonicalURL });
+    return { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items };
+  })()
+];
+
+/* Normalizar structuredData */
+const normalizeStruct = (sd: any) => {
+  if (!sd) return [];
+  if (typeof sd === "string") {
+    try {
+      const parsed = JSON.parse(sd);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      return [];
+    }
+  }
+  return Array.isArray(sd) ? sd : [sd];
+};
+
+/* Stringify seguro */
+const safeStringify = (obj: any) => {
+  try {
+    const seen = new WeakSet();
+    return JSON.stringify(obj, (_k, v) => {
+      if (typeof v === "object" && v !== null) {
+        if (seen.has(v)) return undefined;
+        seen.add(v);
+        if (v instanceof Date) return v.toISOString();
+        if (v instanceof URL) return v.toString();
+      }
+      if (typeof v === "function") return undefined;
+      return v;
+    });
+  } catch {
+    return "[]";
+  }
+};
+
+const schemasToRender = [...defaultSchemas, ...normalizeStruct(structuredData)];
+const jsonLdString = safeStringify(schemasToRender);
+
+/* ===== Inscripción: Google Form ===== */
+const GOOGLE_FORM_ID = "1FAIpQLSdfPB8jlZ0PDPKvmetA6ogBAPRawZCjscULh_gGa2QJnWqQDA";
+const GOOGLE_FORM_EMBED = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/viewform?embedded=true`; // opcional para teasers
+---
+
+<!doctype html>
+<html lang="es-AR" class="scroll-smooth" data-theme="masculina">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{seoTitle}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="author" content="La Doble Bragado" />
+
+    <meta name="robots" content={noindex ? "noindex, nofollow, noarchive" : "index, follow, max-image-preview:large"} />
+    <meta name="googlebot" content={noindex ? "noindex, nofollow, noarchive" : "index, follow, max-image-preview:large"} />
+    <link rel="canonical" href={currentCanonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="La Doble Bragado" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:url" content={currentCanonicalURL} />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="La Doble Bragado, Vuelta de Ciclismo en Buenos Aires" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@ladoblebragado" />
+    <meta name="twitter:creator" content="@ladoblebragado" />
+    <meta name="twitter:url" content={currentCanonicalURL} />
+    <meta name="twitter:title" content={seoTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullImageURL} />
+    <meta name="twitter:image:alt" content="La Doble Bragado, Vuelta de Ciclismo en Buenos Aires" />
+
+    <!-- Geometadatos -->
+    <meta name="geo.region" content={geo.region} />
+    <meta name="geo.placename" content={geo.placename} />
+    <meta name="geo.position" content={geo.position} />
+    <meta name="ICBM" content={geo.icbm} />
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#171442" />
+
+    <!-- Fonts -->
+    {useTypekit && <link rel="preconnect" href="https://use.typekit.net" />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=Audiowide&display=swap" rel="stylesheet" />
+
+    <!-- JSON-LD unificado -->
+    <script type="application/ld+json" set:html={jsonLdString}></script>
+  </head>
+
+  <body class="font-sans bg-white antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-amarillo text-oscuro px-3 py-2 rounded-lg z-50">
+      Saltar al contenido
+    </a>
+
+    <Header />
+
+    <main id="main" role="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Modal de newsletter (contacto legacy) -->
+    <NewsletterModal />
+
+    <!-- ÚNICO MODAL GLOBAL DE VIDEO (YouTube) -->
+    <div id="yt-modal" class="fixed inset-0 z-[200] hidden grid place-items-center p-4 bg-black/70 backdrop-blur-sm">
+      <div id="yt-overlay" class="absolute inset-0"></div>
+      <div class="relative w-full max-w-5xl bg-black rounded-2xl overflow-hidden shadow-2xl" style="aspect-ratio:16/9">
+        <button id="yt-close" type="button"
+          class="group absolute -top-4 -right-4 w-11 h-11 rounded-full bg-white/90 text-oscuro
+                 grid place-items-center shadow-lg hover:scale-105 transition"
+          aria-label="Cerrar video">
+          <svg viewBox="0 0 24 24" class="w-5 h-5">
+            <path d="M6 18L18 6M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <iframe id="yt-iframe"
+          class="w-full h-full"
+          src=""
+          title="YouTube player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- POPUP DE NOTICIA (teaser/CTA; opcional) -->
+    <NewsPopup formSrc={GOOGLE_FORM_EMBED} />
+
+    <!-- Scripts cliente -->
+    <script type="module" src="/scripts/yt-modal-adapter.js"></script>
+    <script type="module" src="/scripts/news-popup.js"></script>
+
+    <!-- Modal de INSCRIPCIÓN (Google Form) -->
+    <InscripcionModal formId={GOOGLE_FORM_ID} />
+
+    <!-- Botón flotante -->
+    <FloatingCTA />
+
+    <!-- Modal de Contacto (Netlify Forms) -->
+    <ContactoModal
+      title="Mantenerme informado"
+      subtitle="Quiero recibir información sobre todas las novedades de La Doble Bragado."
+      formName="contacto-informado"
+    />
+
+    {/*
+      ====== NETLIFY FORMS: formulario 'sombra' para detección en build ======
+      Este form NO se ve (hidden), pero permite que Netlify registre el formulario.
+      Debe tener exactamente los mismos campos que envía el modal.
+    */}
+    <form name="contacto-informado" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <p class="hidden">
+        <label>Si sos humano no completes: <input name="bot-field" /></label>
+      </p>
+      <input type="text" name="nombre" />
+      <input type="email" name="email" />
+      <button type="submit">Enviar</button>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+---
+// Toggle accesible para alternar entre ediciones
+const { defaultEdition = "masculina" } = Astro.props;
+const isMasculina = defaultEdition === "masculina";
+---
+<div class="flex items-center justify-center gap-2 sm:gap-4 my-8" role="group" aria-label="Cambiar edición">
+  <button
+    class="edition-toggle"
+    data-edition="masculina"
+    aria-pressed={isMasculina ? "true" : "false"}
+  >
+    Edición Masculina
+  </button>
+  <button
+    class="edition-toggle"
+    data-edition="femenina"
+    aria-pressed={!isMasculina ? "true" : "false"}
+  >
+    Edición Femenina
+  </button>
+</div>

@@ -1,0 +1,90 @@
+---
+interface Props {
+  edition: number;
+  name: string;
+  year: number;
+  era: string; // etiqueta legible
+  yearsOfVictories: number[];
+  categoria?: "masculino" | "femenino";
+}
+
+const {
+  edition,
+  name,
+  year,
+  era,
+  yearsOfVictories,
+  categoria = "masculino",
+} = Astro.props;
+
+const isFem = categoria === "femenino";
+---
+<div class={`runner-card ${isFem ? 'runner-card--fem' : 'runner-card--masc'}`}>
+  <!-- Header: edición en amarillo -->
+  <div class="card-header">
+    <div class="edition-circle" aria-label="Número de edición">{edition}</div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="card-content">
+    <h2 class="runner-name" title={name}>{name}</h2>
+    <p class="runner-year">{year}</p>
+    <span class="runner-era" aria-label="Era">{era}</span>
+  </div>
+
+  <!-- Estrellas por títulos -->
+  <div class="card-stars" aria-label={`Títulos: ${yearsOfVictories.length}`}>
+    {yearsOfVictories.map(() => (<span class="star" aria-hidden="true">★</span>))}
+  </div>
+</div>
+
+<style>
+  /* Caja estable: sin animaciones de hover */
+  .runner-card {
+    @apply relative rounded-xl overflow-hidden bg-celeste text-white;
+    width: 100%;              /* <- que llene su celda de grid */
+    height: 220px;            /* alto fijo para alineación */
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    @apply shadow-md border border-white/10;
+  }
+  .runner-card:hover { transform: none !important; box-shadow: none !important; }
+
+  /* SIN watermark/logo de fondo */
+  .runner-card::after { content: none !important; }
+
+  .card-header { @apply p-3 flex items-start; }
+  .edition-circle {
+    @apply w-8 h-8 rounded-full border-2 border-white flex items-center justify-center font-black;
+    @apply text-amarillo bg-transparent;
+    line-height: 1;
+  }
+
+  .card-content { @apply px-3 flex flex-col items-start justify-center gap-1; min-height: 0; }
+  .runner-name {
+    @apply text-amarillo font-black;
+    font-size: 0.95rem; line-height: 1.1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+  }
+  .runner-year { @apply text-white/90; font-size: 0.8rem; }
+
+  /* Era con mini contenedor */
+  .runner-era { @apply inline-flex items-center text-white text-xs font-bold bg-white/10 border border-white/20 rounded-full px-2 py-0.5; max-width: 100%; }
+
+  .card-stars { @apply px-3 pb-3 flex flex-wrap gap-1 items-center; }
+  .star { @apply text-amarillo; font-size: 0.9rem; text-shadow: 0 0 3px rgba(247, 226, 0, 0.55); }
+
+  .runner-card--masc {}
+  .runner-card--fem { @apply border-rosa/30; }
+
+  @media (max-width: 640px) {
+    .runner-card { height: 180px; }
+    .edition-circle { @apply w-7 h-7 text-xs; }
+    .runner-name { font-size: 0.85rem; }
+    .runner-year { font-size: 0.75rem; }
+    .runner-era  { font-size: 0.7rem; }
+    .star { font-size: 0.8rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>

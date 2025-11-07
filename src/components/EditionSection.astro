@@ -1,0 +1,43 @@
+---
+// src/components/EditionSection.astro
+
+// 1. DEFINICIÓN DE PROPS
+export interface Props {
+  id: string; // ID del elemento para la navegación (#)
+  title: string; // Título que se mostrará en el H2.
+  tone: "masculine" | "feminine"; // El "tema" de color.
+  className?: string; // Clases adicionales.
+}
+
+const { id, title, tone, className } = Astro.props;
+
+// 2. LÓGICA DE ESTILOS TEMÁTICOS
+// Clases base compartidas por ambas secciones.
+const baseClasses = "scroll-mt-24 py-16";
+
+// Clases específicas para cada "tema" de color.
+const toneClasses = {
+  masculine: "bg-celeste/10 border-t border-celeste text-oscuro",
+  feminine: "bg-rosa/10 border-t border-rosa text-rosa",
+};
+---
+
+<section id={id} class:list={[baseClasses, toneClasses[tone], className]}>
+  <div class="mx-auto max-w-6xl px-4">
+    <h2
+      class:list={[
+        "text-3xl md:text-4xl font-semibold font-display",
+        {
+          "text-oscuro": tone === "masculine",
+          "text-rosa": tone === "feminine",
+        },
+      ]}
+    >
+      {title}
+    </h2>
+
+    <div class="mt-8">
+      <slot />
+    </div>
+  </div>
+</section>

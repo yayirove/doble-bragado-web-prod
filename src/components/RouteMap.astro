@@ -1,0 +1,437 @@
+---
+/**
+ * RouteMap.astro — Mapa Leaflet con selector de etapas por edición
+ * - Masculina: 5 etapas
+ * - Femenina: 4 etapas
+ * 
+ * Busca GPX en /public/routes/ o /public/routes/{edition}/ con varios nombres candidatos:
+ *   etapa-{n}-v2.gpx | etapa-{n}-{edition}.gpx | etapa-{edition}-{n}.gpx | etapa-{n}.gpx | etapa-{n}-{edition}-v2.gpx
+ * Si no encuentra GPX válido o no tiene puntos: dibuja un placeholder punteado (sin mostrar error rojo).
+ */
+
+interface Props {
+  stageFilter?: boolean;
+  defaultStage?: "1" | "2" | "3" | "4" | "5";
+  edition?: "masc" | "fem";
+  class?: string;
+  stageCount?: 1 | 2 | 3 | 4 | 5; // opcional, sobreescribe el conteo por edición
+}
+
+const {
+  stageFilter = true,
+  defaultStage = "1",
+  edition = "masc",
+  class: className = "",
+  stageCount: stageCountProp
+} = Astro.props;
+
+const stageCount = stageCountProp ?? (edition === "fem" ? 4 : 5);
+const componentId = `map-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<div id={`container-${componentId}`} class={`route-map-container ${className}`} data-edition={edition} data-route-map-id={componentId}>
+  {stageFilter && (
+    <div class="mb-6 flex justify-center">
+      <div class="bg-grisclaro rounded-2xl p-2 inline-flex" role="group" aria-label="Seleccionar etapa del recorrido">
+        {Array.from({ length: stageCount }).map((_, i) => {
+          const n = String(i + 1) as "1" | "2" | "3" | "4" | "5";
+          const pressed = defaultStage === n ? "true" : "false";
+          return (
+            <button
+              type="button"
+              class="stage-btn px-5 md:px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-celeste focus:ring-offset-2"
+              data-stage={n}
+              aria-pressed={pressed}
+              aria-label={`Ver mapa de Etapa ${n}`}
+            >
+              Etapa {n}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  )}
+
+  <!-- Contenedor del mapa -->
+  <div class="relative bg-grisclaro rounded-3xl overflow-hidden shadow-xl border-2 border-transparent">
+    <!-- Loading -->
+    <div id={`loading-${componentId}`} class="absolute inset-0 bg-grisclaro flex items-center justify-center z-10" aria-live="polite">
+      <div class="text-center">
+        <div class="w-8 h-8 border-4 border-celeste border-t-transparent rounded-full animate-spin mx-auto mb-4" role="status" aria-hidden="true"></div>
+        <p class="text-oscuro font-semibold">Cargando recorrido...</p>
+      </div>
+    </div>
+
+    <!-- Mapa -->
+    <div
+      id={componentId}
+      class="w-full h-[400px] md:h-[500px] lg:h-[600px] focus:outline-none focus:ring-2 focus:ring-celeste"
+      role="img"
+      aria-label="Mapa interactivo del recorrido de La Doble Bragado"
+      tabindex="0"
+    ></div>
+
+    <!-- Controles -->
+    <div class="absolute top-4 right-4 flex flex-col gap-2 z-20">
+      <button
+        type="button"
+        id={`zoom-in-${componentId}`}
+        class="w-10 h-10 bg-white text-oscuro rounded-lg shadow-lg font-bold text-lg hover:bg-amarillo hover:text-oscuro focus:outline-none focus:ring-2 focus:ring-celeste transition-colors duration-200"
+        aria-label="Aumentar zoom del mapa"
+      >+</button>
+      <button
+        type="button"
+        id={`zoom-out-${componentId}`}
+        class="w-10 h-10 bg-white text-oscuro rounded-lg shadow-lg font-bold text-lg hover:bg-amarillo hover:text-oscuro focus:outline-none focus:ring-2 focus:ring-celeste transition-colors duración-200"
+        aria-label="Reducir zoom del mapa"
+      >−</button>
+      <button
+        type="button"
+        id={`fit-bounds-${componentId}`}
+        class="w-10 h-10 bg-white text-oscuro rounded-lg shadow-lg font-bold text-xs hover:bg-amarillo hover:text-oscuro focus:outline-none focus:ring-2 focus:ring-celeste transition-colors duration-200"
+        aria-label="Ajustar vista completa del recorrido"
+        title="Ver recorrido completo"
+      >⌂</button>
+    </div>
+
+    <!-- Info de etapa -->
+    <div id={`info-${componentId}`} class="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg max-w-xs hidden" role="status" aria-live="polite">
+      <h4 class="font-bold text-oscuro mb-2" id={`info-title-${componentId}`}></h4>
+      <div class="text-sm text-oscuro/70 space-y-1">
+        <p><strong>Distancia:</strong> <span id={`info-distance-${componentId}`}>--</span></p>
+        <p><strong>Desnivel:</strong> <span id={`info-elevation-${componentId}`}>--</span></p>
+        <p id={`info-note-${componentId}`} class="hidden"><strong>Estado:</strong> En construcción</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error catastrófico (solo si falla Leaflet) -->
+  <div id={`error-${componentId}`} class="hidden bg-rosa/10 border-2 border-rosa rounded-xl p-6 text-center" role="alert">
+    <p class="text-oscuro font-semibold mb-2">No se pudo cargar el mapa</p>
+    <p class="text-oscuro/70 text-sm">Verificá tu conexión e intentá nuevamente.</p>
+  </div>
+</div>
+
+<style>
+  .stage-btn {@apply text-oscuro bg-transparent;}
+  .stage-btn[aria-pressed="true"] {@apply bg-celeste text-white;}
+  .stage-btn:hover:not(:disabled) {@apply bg-amarillo text-oscuro;}
+  .stage-btn:disabled {@apply text-oscuro/40 bg-transparent cursor-not-allowed; position: relative;}
+  .stage-btn:disabled::after {content: "🚧"; position: absolute; top: -4px; right: -4px; font-size: 10px;}
+  @media (prefers-reduced-motion: reduce) {.stage-btn, .route-map-container button {transition: none !important;}}
+</style>
+
+<script define:vars={{ componentId, edition, defaultStage, stageFilter, stageCount }}>
+  // Registro global para invalidar mapas al cambiar pestañas
+  window.__routeMaps = window.__routeMaps || {
+    maps: {},
+    invalidateAll() {
+      Object.values(this.maps).forEach((m) => m.invalidate());
+    }
+  };
+
+  class RouteMapComponent {
+    constructor(componentId, edition, defaultStage, stageFilter, stageCount) {
+      this.componentId = componentId;
+      this.edition = edition;
+      this.currentStage = defaultStage;
+      this.stageFilter = stageFilter;
+      this.stageCount = stageCount;
+
+      this.map = null;
+      this.routeLayer = null;
+      this.startMarker = null;
+      this.endMarker = null;
+
+      this._container = document.getElementById(`container-${componentId}`);
+
+      window.__routeMaps.maps[this.componentId] = this;
+      this.init();
+    }
+
+    async init() {
+      try {
+        await this.loadLeaflet();
+        this.initMap();
+        await this.loadRoute(this.currentStage);
+        this.setupEventListeners();
+        this.hideLoading();
+        this.hideError();
+      } catch (error) {
+        console.error('[RouteMap] Error initializing:', error);
+        this.showError();
+      }
+    }
+
+    async loadLeaflet() {
+      if (typeof L !== 'undefined') return;
+
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+      document.head.appendChild(link);
+
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+      document.head.appendChild(script);
+
+      await new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = reject;
+      });
+    }
+
+    initMap() {
+      const el = document.getElementById(this.componentId);
+      if (!el) throw new Error('Map container not found');
+
+      this.map = L.map(this.componentId, {
+        center: [-35.3, -59.8],
+        zoom: 8,
+        zoomControl: false,
+        attributionControl: true
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(this.map);
+
+      document.getElementById(`zoom-in-${this.componentId}`)?.addEventListener('click', () => this.map?.zoomIn());
+      document.getElementById(`zoom-out-${this.componentId}`)?.addEventListener('click', () => this.map?.zoomOut());
+      document.getElementById(`fit-bounds-${this.componentId}`)?.addEventListener('click', () => this.fitMapBounds());
+
+      window.addEventListener('resize', () => this.invalidate(), { passive: true });
+      setTimeout(() => this.invalidate(), 300);
+    }
+
+    invalidate() {
+      if (!this.map) return;
+      this.map.invalidateSize();
+      this.fitMapBounds();
+    }
+
+    clearRoute() {
+      if (this.routeLayer) { this.map?.removeLayer(this.routeLayer); this.routeLayer = null; }
+      if (this.startMarker) { this.map?.removeLayer(this.startMarker); this.startMarker = null; }
+      if (this.endMarker) { this.map?.removeLayer(this.endMarker); this.endMarker = null; }
+    }
+
+    extractCoordsFromGPX(gpxText) {
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(gpxText, 'application/xml');
+
+        const root = doc.documentElement;
+        const isGPX = !!root && (root.localName?.toLowerCase?.() === 'gpx' || root.nodeName?.toLowerCase?.() === 'gpx');
+        if (!isGPX) return [];
+
+        const all = Array.from(doc.getElementsByTagName('*'));
+        let pts = all.filter(n => n.localName === 'trkpt').map((pt) => [
+          parseFloat(pt.getAttribute('lat') || 'NaN'),
+          parseFloat(pt.getAttribute('lon') || 'NaN')
+        ]);
+
+        if (!pts.length) {
+          pts = all.filter(n => n.localName === 'rtept').map((pt) => [
+            parseFloat(pt.getAttribute('lat') || 'NaN'),
+            parseFloat(pt.getAttribute('lon') || 'NaN')
+          ]);
+        }
+
+        return pts.filter(([lat, lon]) => Number.isFinite(lat) && Number.isFinite(lon));
+      } catch (e) {
+        console.warn('[RouteMap] No se pudo parsear el GPX:', e);
+        return [];
+      }
+    }
+
+    async findValidGPX(stage) {
+      const names = [
+        `etapa-${stage}-v2.gpx`,
+        `etapa-${stage}-${this.edition}.gpx`,
+        `etapa-${this.edition}-${stage}.gpx`,
+        `etapa-${stage}.gpx`,
+        `etapa-${stage}-${this.edition}-v2.gpx`
+      ];
+      const bases = [
+        '/routes/',
+        `/routes/${this.edition}/`
+      ];
+
+      for (const base of bases) {
+        for (const name of names) {
+          const url = base + name;
+          try {
+            const resp = await fetch(url, { cache: 'no-store' });
+            if (!resp.ok) continue;
+            const text = await resp.text();
+            const coords = this.extractCoordsFromGPX(text);
+            if (coords.length) {
+              console.info(`[RouteMap] GPX OK: ${url}`);
+              return { coords, name: url };
+            }
+          } catch {
+            // sigue probando
+          }
+        }
+      }
+      return null;
+    }
+
+    async loadRoute(stage) {
+      try {
+        this.clearRoute();
+
+        const found = await this.findValidGPX(stage);
+        if (!found) {
+          this.createPlaceholderRoute(stage, true);
+          this.updateInfoPanel(stage, true);
+          this.hideError();
+          return;
+        }
+
+        this.drawRoute(found.coords, stage);
+        this.updateInfoPanel(stage, false);
+        this.hideError();
+      } catch (err) {
+        console.warn(`[RouteMap] Fallo al cargar etapa ${stage}:`, err);
+        this.createPlaceholderRoute(stage, true);
+        this.updateInfoPanel(stage, true);
+        this.hideError();
+      }
+    }
+
+    drawRoute(coords, stage) {
+      if (!this.map) return;
+
+      const color = this.edition === 'fem' ? '#8B5FBF' : '#2DD4BF';
+      this.routeLayer = L.polyline(coords, { color, weight: 4, opacity: 0.9, smoothFactor: 1 }).addTo(this.map);
+      this.currentStage = stage;
+
+      const start = coords[0];
+      const end = coords[coords.length - 1];
+
+      const startIcon = L.divIcon({
+        html: '<div class="w-6 h-6 bg-celeste rounded-full border-2 border-white shadow-lg grid place-items-center text-white text-xs font-bold">S</div>',
+        className: 'custom-marker', iconSize: [24, 24], iconAnchor: [12, 12]
+      });
+      const endIcon = L.divIcon({
+        html: '<div class="w-6 h-6 bg-rosa rounded-full border-2 border-white shadow-lg grid place-items-center text-white text-xs font-bold">F</div>',
+        className: 'custom-marker', iconSize: [24, 24], iconAnchor: [12, 12]
+      });
+
+      this.startMarker = L.marker(start, { icon: startIcon }).bindPopup(`<strong>Inicio - Etapa ${stage}</strong>`).addTo(this.map);
+      this.endMarker = L.marker(end, { icon: endIcon }).bindPopup(`<strong>Meta - Etapa ${stage}</strong>`).addTo(this.map);
+
+      this.fitMapBounds();
+    }
+
+    fitMapBounds() {
+      if (this.routeLayer && this.map) {
+        this.map.fitBounds(this.routeLayer.getBounds(), { padding: [20, 20] });
+      }
+    }
+
+    updateInfoPanel(stage, placeholder) {
+      const panel = document.getElementById(`info-${this.componentId}`);
+      const title = document.getElementById(`info-title-${this.componentId}`);
+      const dist = document.getElementById(`info-distance-${this.componentId}`);
+      const elev = document.getElementById(`info-elevation-${this.componentId}`);
+      const note = document.getElementById(`info-note-${this.componentId}`);
+
+      if (!panel || !title || !dist || !elev || !note) return;
+
+      title.textContent = `Etapa ${stage} — ${this.edition === 'fem' ? 'Femenina' : 'Masculina'}`;
+
+      const defaults = {
+        masc: { "1": { d: "120 km", e: "300 m" }, "2": { d: "160 km", e: "450 m" }, "3": { d: "10 km (CRI)", e: "50 m" }, "4": { d: "130 km", e: "420 m" }, "5": { d: "120 km", e: "320 m" } },
+        fem:  { "1": { d: "100 km", e: "280 m" }, "2": { d: "120 km", e: "380 m" }, "3": { d: "8 km (CRI)",  e: "40 m"  }, "4": { d: "110 km", e: "300 m" } }
+      };
+      const pack = (this.edition === 'fem' ? defaults.fem : defaults.masc)[stage] || { d: "--", e: "--" };
+
+      dist.textContent = pack.d;
+      elev.textContent = pack.e;
+
+      note.classList.toggle('hidden', !placeholder);
+      panel.classList.remove('hidden');
+    }
+
+    setupEventListeners() {
+      if (!this.stageFilter) return;
+      this._container?.querySelectorAll('.stage-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => this.handleStageChange(e));
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.handleStageChange(e);
+          }
+        });
+      });
+    }
+
+    async handleStageChange(event) {
+      const button = event.currentTarget;
+      const newStage = button?.getAttribute('data-stage');
+      if (!newStage || newStage === this.currentStage) return;
+
+      this._container?.querySelectorAll('.stage-btn').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      button.setAttribute('aria-pressed', 'true');
+
+      this.currentStage = newStage;
+      this.showLoading();
+      await this.loadRoute(newStage);
+      this.hideLoading();
+    }
+
+    showLoading() { document.getElementById(`loading-${this.componentId}`)?.classList.remove('hidden'); }
+    hideLoading() { document.getElementById(`loading-${this.componentId}`)?.classList.add('hidden'); }
+    showError()   { document.getElementById(`error-${this.componentId}`)?.classList.remove('hidden'); }
+    hideError()   { document.getElementById(`error-${this.componentId}`)?.classList.add('hidden'); }
+
+    // Placeholders aproximados zona Bragado/Chivilcoy/Pergamino
+    createPlaceholderRoute(stage, showNote) {
+      if (!this.map) return;
+
+      const coordsMasc = {
+        "1": [[-35.12, -60.48], [-35.08, -60.30], [-34.90, -60.02]],
+        "2": [[-34.90, -60.02], [-34.55, -60.57], [-33.89, -60.57]],
+        "3": [[-35.00, -60.20], [-34.98, -60.18], [-34.96, -60.16], [-34.94, -60.14]],
+        "4": [[-33.89, -60.57], [-34.10, -60.30], [-34.50, -60.10]],
+        "5": [[-34.50, -60.10], [-34.80, -60.30], [-35.12, -60.48]]
+      };
+      const coordsFem = {
+        "1": [[-35.12, -60.48], [-35.05, -60.30], [-34.90, -60.02]],
+        "2": [[-34.90, -60.02], [-34.60, -60.30], [-33.89, -60.57]],
+        "3": [[-35.00, -60.20], [-34.98, -60.18], [-34.96, -60.16]],
+        "4": [[-33.89, -60.57], [-34.30, -60.20], [-35.12, -60.48]]
+      };
+      const table = this.edition === 'fem' ? coordsFem : coordsMasc;
+      const coordinates = table[String(stage)] || [[-35.12, -60.48], [-34.90, -60.02]];
+
+      this.clearRoute();
+
+      const color = this.edition === 'fem' ? '#8B5FBF' : '#2DD4BF';
+      this.routeLayer = L.polyline(coordinates, { color, weight: 4, opacity: 0.8, dashArray: '10, 10' }).addTo(this.map);
+      this.currentStage = stage;
+      this.fitMapBounds();
+
+      const note = document.getElementById(`info-note-${this.componentId}`);
+      note?.classList.toggle('hidden', !showNote);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    new RouteMapComponent(componentId, edition, defaultStage, stageFilter, stageCount);
+  });
+</script>
+
+<style is:global>
+  .leaflet-container { background-color: theme('colors.grisclaro'); }
+  .leaflet-control-attribution { background-color: rgba(255,255,255,.9) !important; font-size: 10px !important; }
+  .leaflet-popup-content-wrapper { background-color: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.2); }
+  .leaflet-popup-content { margin: 12px 16px !important; font-weight: 600; color: theme('colors.oscuro'); }
+  .custom-marker { background: transparent !important; border: none !important; }
+  .leaflet-container:focus { outline: 2px solid theme('colors.celeste'); outline-offset: 2px; }
+  @media (max-width: 768px) { .leaflet-control-attribution { font-size: 8px !important; } }
+</style>

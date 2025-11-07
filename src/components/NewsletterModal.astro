@@ -1,0 +1,279 @@
+<!-- NewsletterModal.astro -->
+<div id="newsletter-modal" 
+     class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-500 ease-out" 
+     aria-hidden="true" 
+     role="dialog" 
+     aria-labelledby="modal-title" 
+     aria-describedby="modal-description">
+  
+  <!-- Backdrop -->
+  <div id="modal-backdrop" 
+       class="absolute inset-0 bg-oscuro/80 backdrop-blur-lg transition-opacity duration-500"></div>
+  
+  <!-- Modal Content -->
+  <div id="modal-content" 
+       class="relative bg-gradient-to-br from-white via-white/98 to-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-oscuro/40 border border-amarillo/30 max-w-md w-full mx-4 transform scale-75 transition-all duration-500 ease-out">
+    
+    <!-- Decorative header line -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-celeste via-amarillo to-rosa rounded-t-3xl"></div>
+    
+    <!-- Close button -->
+    <button
+      id="close-modal"
+      class="group absolute top-3 right-3 z-20 w-12 h-12 grid place-items-center rounded-full bg-white/90 hover:bg-white transition shadow-lg focus:outline-none focus:ring-4 focus:ring-amarillo/40"
+      aria-label="Cerrar modal"
+    >
+      <span class="sr-only">Cerrar</span>
+      <svg class="w-6 h-6 text-oscuro pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Modal Body -->
+    <div class="p-8">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-celeste to-violeta rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        
+        <h2 id="modal-title" class="text-2xl font-bold text-violeta mb-2">
+          Mantenete informado
+        </h2>
+        
+        <p id="modal-description" class="text-oscuro/70 text-sm leading-relaxed">
+          Recibí las últimas noticias, actualizaciones de recorrido y novedades de La Doble Bragado.
+        </p>
+      </div>
+      
+      <!-- Newsletter Form (Netlify) -->
+      <form id="newsletter-modal-form" name="newsletter-signup" method="POST" data-netlify="true" netlify-honeypot="bot-field-modal" class="space-y-4">
+        <input type="hidden" name="form-name" value="newsletter-signup" />
+        <p class="hidden"><label>Si sos humano no completes: <input name="bot-field-modal" /></label></p>
+        
+        <!-- Name Field -->
+        <div class="relative group">
+          <label for="modal-nombre" class="block font-semibold mb-2 text-violeta transition-colors duration-300 group-focus-within:text-amarillo">
+            Nombre
+          </label>
+          <div class="relative">
+            <input type="text" 
+                   id="modal-nombre" 
+                   name="nombre" 
+                   class="w-full px-4 py-3 bg-white/90 backdrop-blur-sm border-2 border-grisclaro/40 rounded-2xl text-oscuro placeholder-oscuro/60 transition-all duration-300 focus:border-amarillo focus:ring-4 focus:ring-amarillo/20 focus:bg-white focus:outline-none hover:border-celeste/60" 
+                   placeholder="Tu nombre" />
+            <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-amarillo/5 to-rosa/5 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+          </div>
+        </div>
+        
+        <!-- Email Field -->
+        <div class="relative group">
+          <label for="modal-email" class="block font-semibold mb-2 text-violeta transition-colors duration-300 group-focus-within:text-amarillo">
+            Email *
+          </label>
+          <div class="relative">
+            <input type="email" 
+                   id="modal-email" 
+                   name="email" 
+                   required
+                   class="w-full px-4 py-3 bg-white/90 backdrop-blur-sm border-2 border-grisclaro/40 rounded-2xl text-oscuro placeholder-oscuro/60 transition-all duration-300 focus:border-amarillo focus:ring-4 focus:ring-amarillo/20 focus:bg-white focus:outline-none hover:border-celeste/60" 
+                   placeholder="tu@email.com" />
+            <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-amarillo/5 to-rosa/5 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <button type="submit" 
+                class="w-full group/btn relative overflow-hidden px-6 py-3 bg-gradient-to-r from-celeste to-violeta text-white font-semibold rounded-2xl shadow-lg shadow-celeste/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-violeta/40 focus:outline-none focus:ring-4 focus:ring-amarillo/40">
+          <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 -skew-x-12 transform -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out"></div>
+          <span class="relative z-10 flex items-center justify-center gap-2">
+            Suscribirse al Newsletter
+            <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </span>
+        </button>
+        
+        <!-- Privacy notice -->
+        <p class="text-xs text-oscuro/60 text-center leading-relaxed">
+          Al suscribirte aceptás recibir emails con noticias de La Doble Bragado. Podés darte de baja cuando quieras.
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById('newsletter-modal');
+    const modalContent = document.getElementById('modal-content');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const closeButton = document.getElementById('close-modal');
+    const form = document.getElementById('newsletter-modal-form');
+    const submitButton = form?.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton?.innerHTML;
+    
+    let isModalOpen = false;
+    let focusPrev = null;
+
+    const emit = (name) => window.dispatchEvent(new CustomEvent(name));
+
+    // Open modal function
+    const openModal = () => {
+      if (!modal || isModalOpen) return;
+      isModalOpen = true;
+      focusPrev = document.activeElement;
+
+      // Mostrar
+      modal.classList.remove('opacity-0', 'invisible');
+      modal.setAttribute('aria-hidden', 'false');
+
+      // Animación in
+      setTimeout(() => {
+        modalContent.style.transform = 'scale(1)';
+        modalBackdrop.style.opacity = '1';
+      }, 50);
+
+      // Lock scroll
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${window.scrollY}px`;
+      document.body.style.width = '100%';
+
+      // Foco
+      setTimeout(() => {
+        const firstInput = modal.querySelector('input:not([type="hidden"])');
+        firstInput?.focus();
+      }, 300);
+
+      // ➕ Emitir evento global
+      emit('newsletterModal:open');
+    };
+    
+    // Close modal function
+    const closeModal = () => {
+      if (!modal || !isModalOpen) return;
+      isModalOpen = false;
+
+      // Animación out
+      modalContent.style.transform = 'scale(0.75)';
+      modalBackdrop.style.opacity = '0';
+      setTimeout(() => {
+        modal.classList.add('opacity-0', 'invisible');
+        modal.setAttribute('aria-hidden', 'true');
+      }, 300);
+
+      // Unlock scroll
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
+
+      // Devolver foco
+      focusPrev?.focus?.();
+
+      // ➕ Emitir evento global
+      emit('newsletterModal:close');
+    };
+    
+    // Listeners
+    closeButton?.addEventListener('click', closeModal);
+    modalBackdrop?.addEventListener('click', closeModal);
+
+    // Abrir por evento global (Header / CTA / NewsPopup)
+    window.addEventListener('openNewsletterModal', openModal);
+
+    // Cerrar con ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isModalOpen) closeModal();
+    });
+    
+    // Envío Netlify
+    if (form && submitButton) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const email = formData.get('email');
+        if (!email) {
+          showFormMessage('Por favor ingresa un email válido.', 'error');
+          return;
+        }
+        // Loading
+        submitButton.innerHTML = `
+          <span class="flex items-center justify-center gap-2">
+            <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Suscribiendo...
+          </span>
+        `;
+        submitButton.disabled = true;
+        try {
+          await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString()
+          });
+          submitButton.innerHTML = `
+            <span class="flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              ¡Suscripción exitosa!
+            </span>
+          `;
+          form.reset();
+          setTimeout(() => {
+            closeModal();
+            submitButton.innerHTML = originalButtonText;
+            submitButton.disabled = false;
+          }, 2000);
+        } catch (error) {
+          submitButton.innerHTML = 'Error - Intentar nuevamente';
+          submitButton.disabled = false;
+          console.error('Newsletter subscription error:', error);
+          setTimeout(() => {
+            submitButton.innerHTML = originalButtonText;
+            submitButton.disabled = false;
+          }, 3000);
+        }
+      });
+    }
+    
+    function showFormMessage(message, type) {
+      let statusElement = document.getElementById('modal-form-status');
+      if (!statusElement) {
+        statusElement = document.createElement('p');
+        statusElement.id = 'modal-form-status';
+        form.appendChild(statusElement);
+      }
+      statusElement.textContent = message;
+      statusElement.className = `text-sm mt-2 ${type === 'error' ? 'text-red-500' : 'text-green-500'}`;
+      setTimeout(() => { statusElement.textContent = ''; }, 5000);
+    }
+  });
+</script>
+
+<style>
+  /* Helpers */
+  #newsletter-modal.show { opacity: 1; visibility: visible; }
+  #newsletter-modal.show #modal-content { transform: scale(1); }
+  #newsletter-modal.show #modal-backdrop { opacity: 1; }
+
+  #newsletter-modal input:focus,
+  #newsletter-modal button:focus {
+    outline: 2px solid rgba(247, 226, 0, 0.8);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 480px) {
+    #modal-content { margin: 1rem; max-width: calc(100vw - 2rem); }
+  }
+
+  #newsletter-modal * { backface-visibility: hidden; transform-style: preserve-3d; }
+</style>

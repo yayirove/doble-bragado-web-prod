@@ -1,0 +1,45 @@
+---
+// src/components/CtaButton.astro
+
+// 1. DEFINICIÓN DE PROPS
+// Estas son las "opciones" que nuestro botón aceptará.
+export interface Props {
+  href: string; // La URL a la que apunta el botón.
+  label: string; // El texto que mostrará el botón.
+  variant?: "primary" | "secondary"; // El estilo visual (primario o secundario).
+  isExternal?: boolean; // Si es un enlace externo (para accesibilidad y seguridad).
+  className?: string; // Para añadir clases extra si es necesario.
+}
+
+const {
+  href,
+  label,
+  variant = "primary", // Por defecto, será un botón primario.
+  isExternal = false,
+  className,
+} = Astro.props;
+
+// 2. LÓGICA DE ESTILOS
+// Clases base que todos los botones comparten.
+const baseClasses = `
+  inline-flex items-center rounded-md px-5 py-3 font-medium transition
+  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+`;
+
+// Clases específicas para cada variante, cumpliendo con los requisitos.
+const variantClasses = {
+  primary:
+    "bg-celeste text-white hover:bg-amarillo hover:text-black focus-visible:ring-celeste",
+  secondary:
+    "border border-celeste text-celeste hover:bg-celeste/10 focus-visible:ring-celeste",
+};
+---
+
+<a
+  href={href}
+  class:list={[baseClasses, variantClasses[variant], className]}
+  target={isExternal ? "_blank" : undefined}
+  rel={isExternal ? "noopener noreferrer" : undefined}
+>
+  {label}
+</a>
