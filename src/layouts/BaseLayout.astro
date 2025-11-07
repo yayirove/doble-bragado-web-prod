@@ -272,6 +272,16 @@ const GOOGLE_FORM_EMBED = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/v
       formName="contacto-informado"
       title="Mantenerme informado"
       subtitle="Quiero recibir informacion sobre todas las novedades de La Doble Bragado."
-    />
+    
+      
+      />
+<!-- Fallback solo para que Netlify detecte el form al construir -->
+<form name="contacto-informado" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="contacto-informado" />
+  <p class="hidden"><label>No completar: <input name="bot-field" /></label></p>
+  <input type="text" name="nombre" />
+  <input type="email" name="email" />
+</form>
+
   </body>
 </html>
